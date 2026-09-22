@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 2 - Exercise 2: Ready and Events</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 20px; line-height: 1.6; background: #f5f7fb; color: #1f2937; }
+    main { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 3px 12px rgba(0,0,0,.12); }
+    button { margin: 8px 8px 12px 0; padding: 10px 14px; border: 0; border-radius: 6px; background: #1d4ed8; color: white; cursor: pointer; }
+    button:hover { background: #1e40af; }
+    p { padding: 14px; border-left: 5px solid #2563eb; background: #eff6ff; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Exercise 2: jQuery ready() and Event Handling</h1>
+    <p id="paragraph1">This is the first paragraph. The first button controls only this paragraph.</p>
+    <p id="paragraph2">This is the second paragraph. The second button controls only this paragraph.</p>
+
+    <button id="hideFirst">Hide First Paragraph</button>
+    <button id="hideSecond">Hide Second Paragraph</button>
+    <button id="showBoth">Restore Both Paragraphs</button>
+  </main>
+
+  <script>
+    $(document).ready(function () {
+      $("#hideFirst").click(function () {
+        $("#paragraph1").hide();
+      });
+
+      $("#hideSecond").click(function () {
+        $("#paragraph2").hide();
+      });
+
+      $("#showBoth").click(function () {
+        $("#paragraph1, #paragraph2").show();
+      });
+    });
+  </script>
+</body>
+</html>

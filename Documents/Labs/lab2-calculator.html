@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 2 - jQuery Calculator</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 680px; margin: 35px auto; padding: 0 20px; background: #f0fdf4; color: #1f2937; }
+    main { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,.12); }
+    label { display: block; margin-top: 14px; font-weight: bold; }
+    input, select { box-sizing: border-box; display: block; width: 100%; margin-top: 6px; padding: 10px; border: 1px solid #94a3b8; border-radius: 6px; font-size: 1rem; }
+    button { margin-top: 20px; padding: 11px 17px; border: 0; border-radius: 6px; background: #15803d; color: white; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #166534; }
+    #message { margin-top: 20px; min-height: 28px; padding: 12px; border-radius: 6px; }
+    .error { color: #991b1b; background: #fee2e2; border: 1px solid #fecaca; }
+    .success { background: #dcfce7; border: 1px solid #bbf7d0; font-size: 1.15rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Exercise 6: jQuery Calculator</h1>
+    <p>Enter two numbers, select an operation, choose a result color, and calculate.</p>
+
+    <label for="number1">First number</label>
+    <input id="number1" type="text" inputmode="decimal" placeholder="Example: 12.5">
+
+    <label for="operation">Operation</label>
+    <select id="operation">
+      <option value="add">Addition (+)</option>
+      <option value="subtract">Subtraction (−)</option>
+      <option value="multiply">Multiplication (*)</option>
+      <option value="divide">Division (/)</option>
+    </select>
+
+    <label for="number2">Second number</label>
+    <input id="number2" type="text" inputmode="decimal" placeholder="Example: 4">
+
+    <label for="resultColor">Result color</label>
+    <input id="resultColor" type="text" placeholder="Example: blue" value="green">
+
+    <button id="calculate">Calculate</button>
+    <div id="message" aria-live="polite"></div>
+  </main>
+
+  <script>
+    $(document).ready(function () {
+      $("#calculate").click(function () {
+        const firstText = $.trim($("#number1").val());
+        const secondText = $.trim($("#number2").val());
+        const operation = $("#operation").val();
+        const color = $.trim($("#resultColor").val()) || "green";
+        const message = $("#message");
+
+        message.removeClass("error success").css("color", "").empty();
+
+        if (firstText === "" || secondText === "") {
+          message.addClass("error").text("Error: Enter a value in both number fields.");
+          return;
+        }
+
+        const number1 = Number(firstText);
+        const number2 = Number(secondText);
+
+        if (!Number.isFinite(number1) || !Number.isFinite(number2)) {
+          message.addClass("error").text("Error: Both entries must be valid numbers.");
+          return;
+        }
+
+        if (operation === "divide" && number2 === 0) {
+          message.addClass("error").text("Error: Division by zero is not allowed.");
+          return;
+        }
+
+        let result;
+        let symbol;
+        if (operation === "add") { result = number1 + number2; symbol = "+"; }
+        if (operation === "subtract") { result = number1 - number2; symbol = "−"; }
+        if (operation === "multiply") { result = number1 * number2; symbol = "×"; }
+        if (operation === "divide") { result = number1 / number2; symbol = "÷"; }
+
+        message.addClass("success").css("color", color).text(number1 + " " + symbol + " " + number2 + " = " + result);
+      });
+    });
+  </script>
+</body>
+</html>

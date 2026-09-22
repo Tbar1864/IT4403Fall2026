@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 2 - Exercise 5: Visual Effects</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 35px auto; padding: 0 20px; background: #eef2ff; color: #1f2937; }
+    main { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,.12); }
+    button { background: #4338ca; border: 0; color: white; border-radius: 6px; padding: 10px 13px; margin: 5px 5px 5px 0; cursor: pointer; }
+    button:hover { background: #3730a3; }
+    #effectBox { margin-top: 22px; padding: 28px; background: linear-gradient(135deg, #c4b5fd, #818cf8); color: #1e1b4b; border: 3px solid #4f46e5; border-radius: 10px; text-align: center; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Exercise 5: jQuery Visual Effects</h1>
+    <p>Use the buttons below to apply jQuery effects to the demonstration box.</p>
+
+    <button id="hideButton">Hide</button>
+    <button id="showButton">Show</button>
+    <button id="toggleButton">Toggle</button>
+    <button id="fadeOutButton">Fade Out</button>
+    <button id="fadeInButton">Fade In</button>
+    <button id="slideUpButton">Slide Up</button>
+    <button id="slideDownButton">Slide Down</button>
+
+    <div id="effectBox">
+      <h2>jQuery Effects Demo</h2>
+      <p>This panel responds to hide, show, toggle, fade, and slide methods.</p>
+    </div>
+  </main>
+
+  <script>
+    $(document).ready(function () {
+      $("#hideButton").click(function () { $("#effectBox").hide(); });
+      $("#showButton").click(function () { $("#effectBox").show(); });
+      $("#toggleButton").click(function () { $("#effectBox").toggle(); });
+      $("#fadeOutButton").click(function () { $("#effectBox").fadeOut(700); });
+      $("#fadeInButton").click(function () { $("#effectBox").fadeIn(700); });
+      $("#slideUpButton").click(function () { $("#effectBox").slideUp(700); });
+      $("#slideDownButton").click(function () { $("#effectBox").slideDown(700); });
+    });
+  </script>
+</body>
+</html>
