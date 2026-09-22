@@ -84,6 +84,24 @@
         border-left: 5px solid var(--gold);
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
       }
+      .lab-materials ul {
+        margin: 0;
+        padding-left: 22px;
+      }
+      .lab-materials li {
+        margin: 12px 0;
+      }
+      .lab-materials a:not(.button) {
+        color: #1a4f9c;
+        font-weight: bold;
+      }
+      .lab-materials a:not(.button):hover,
+      .lab-materials a:not(.button):focus {
+        color: #000;
+        background: var(--gold);
+        outline: 2px solid #000;
+        outline-offset: 2px;
+      }
       .button {
         display: inline-block;
         margin-top: 20px;
@@ -143,12 +161,48 @@
         Hands-on lab activities, instructions, and supporting resources for the
         course.
       </p>
-      <section class="notice" aria-label="Lab work materials notice">
-        <h3>Lab Materials</h3>
+
+      <section class="notice lab-materials" aria-labelledby="lab2-heading">
+        <h3 id="lab2-heading">Lab 2: jQuery</h3>
         <p>
-          No lab work materials are available yet. Add lab titles, procedures,
-          downloads, or submission links here as they become available.
+          This lab includes practice with jQuery selectors, events, DOM
+          manipulation, CSS changes, visual effects, and interactive
+          applications.
         </p>
+
+        <ul>
+          <li>
+            <a href="lab2-exercise2-ready-events.html">
+              Exercise 2: jQuery ready() and Event Handling
+            </a>
+          </li>
+          <li>
+            <a href="lab2-exercise3-selectors-dom-css.html">
+              Exercise 3: jQuery Selectors, DOM, and CSS
+            </a>
+          </li>
+          <li>
+            <a href="lab2-exercise4-table-events.html">
+              Exercise 4: Table Selection and Event Handling
+            </a>
+          </li>
+          <li>
+            <a href="lab2-exercise5-visual-effects.html">
+              Exercise 5: jQuery Visual Effects
+            </a>
+          </li>
+          <li>
+            <a href="lab2-calculator.html">
+              Exercise 6: jQuery Calculator Application
+            </a>
+          </li>
+          <li>
+            <a href="lab2-picture-browser.html">
+              Exercise 7: Picture Browser Application
+            </a>
+          </li>
+        </ul>
+
         <a class="button" href="index.html">Return Home</a>
       </section>
     </main>
