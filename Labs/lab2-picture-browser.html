@@ -1,74 +1,163 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab 2 - Picture Browser</title>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 900px; margin: 35px auto; padding: 0 20px; background: #f8fafc; color: #1f2937; }
-    main { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,.12); text-align: center; }
-    #photo { display: block; width: 100%; max-width: 720px; height: 420px; object-fit: cover; margin: 20px auto 12px; border-radius: 9px; border: 3px solid #334155; }
-    button { padding: 10px 16px; background: #0369a1; color: white; border: 0; border-radius: 6px; cursor: pointer; font-size: 1rem; }
-    button:hover { background: #075985; }
-    #caption { font-size: 1.1rem; font-weight: bold; margin: 10px 0 4px; }
-    #counter, #error { min-height: 22px; color: #475569; }
-    #error { color: #b91c1c; }
-    .attribution { font-size: .9rem; color: #64748b; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Exercise 7: jQuery Picture Browser</h1>
-    <p>Use the Next button or the right-arrow key to view the next image.</p>
-
-    <img id="photo" src="" alt="Picture browser image">
-    <p id="caption"></p>
-    <p id="counter" aria-live="polite"></p>
-    <p id="error" aria-live="polite"></p>
-    <button id="nextButton">Next Image</button>
-    <p class="attribution">Images are loaded from Unsplash Source, which provides random photographs by topic.</p>
-  </main>
-
-  <script>
-    $(document).ready(function () {
-      const images = [
-        { url: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=80", caption: "Mountain landscape" },
-        { url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=80", caption: "Forest trail" },
-        { url: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=80", caption: "Lake and mountains" },
-        { url: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1200&q=80", caption: "Sunset over water" },
-        { url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80", caption: "Ocean shoreline" }
-      ];
-      let currentIndex = 0;
-
-      function displayImage() {
-        const currentImage = images[currentIndex];
-        $("#error").empty();
-        $("#photo").stop(true, true).fadeOut(250, function () {
-          $(this).attr({ src: currentImage.url, alt: currentImage.caption }).fadeIn(500);
-        });
-        $("#caption").text(currentImage.caption);
-        $("#counter").text("Image " + (currentIndex + 1) + " of " + images.length);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 2 - Picture Browser</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 900px;
+        margin: 35px auto;
+        padding: 0 20px;
+        background: #f8fafc;
+        color: #1f2937;
+      }
+      main {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+        text-align: center;
+      }
+      #photo {
+        display: block;
+        width: 100%;
+        max-width: 720px;
+        height: 420px;
+        object-fit: cover;
+        margin: 20px auto 12px;
+        border-radius: 9px;
+        border: 3px solid #334155;
+      }
+      button {
+        padding: 10px 16px;
+        background: #0369a1;
+        color: white;
+        border: 0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      button:hover {
+        background: #075985;
+      }
+      #caption {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin: 10px 0 4px;
+      }
+      #counter,
+      #error {
+        min-height: 22px;
+        color: #475569;
+      }
+      #error {
+        color: #b91c1c;
+      }
+      .attribution {
+        font-size: 0.9rem;
+        color: #64748b;
       }
 
-      function nextImage() {
-        currentIndex = (currentIndex + 1) % images.length;
-        displayImage();
+      .back-button {
+        display: block;
+        width: fit-content;
+        margin-top: 18px;
+        padding: 10px 14px;
+        border-radius: 6px;
+        background: #6b7280;
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
       }
 
-      $("#nextButton").click(nextImage);
-      $(document).keydown(function (event) {
-        if (event.key === "ArrowRight") {
-          nextImage();
+      .back-button:hover {
+        background: #4b5563;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Exercise 7: jQuery Picture Browser</h1>
+      <p>Use the Next button or the right-arrow key to view the next image.</p>
+
+      <img id="photo" src="" alt="Picture browser image" />
+      <p id="caption"></p>
+      <p id="counter" aria-live="polite"></p>
+      <p id="error" aria-live="polite"></p>
+      <button id="nextButton">Next Image</button>
+      <p class="attribution">
+        Images are loaded from Unsplash Source, which provides random
+        photographs by topic.
+      </p>
+
+      <a class="back-button" href="../lab-work.html">← Back to Labs</a>
+    </main>
+
+    <script>
+      $(document).ready(function () {
+        const images = [
+          {
+            url: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=80",
+            caption: "Mountain landscape",
+          },
+          {
+            url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=80",
+            caption: "Forest trail",
+          },
+          {
+            url: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=80",
+            caption: "Lake and mountains",
+          },
+          {
+            url: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1200&q=80",
+            caption: "Sunset over water",
+          },
+          {
+            url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+            caption: "Ocean shoreline",
+          },
+        ];
+        let currentIndex = 0;
+
+        function displayImage() {
+          const currentImage = images[currentIndex];
+          $("#error").empty();
+          $("#photo")
+            .stop(true, true)
+            .fadeOut(250, function () {
+              $(this)
+                .attr({ src: currentImage.url, alt: currentImage.caption })
+                .fadeIn(500);
+            });
+          $("#caption").text(currentImage.caption);
+          $("#counter").text(
+            "Image " + (currentIndex + 1) + " of " + images.length,
+          );
         }
-      });
 
-      $("#photo").on("error", function () {
-        $("#error").text("The selected image could not be loaded. Please try the next image.");
-      });
+        function nextImage() {
+          currentIndex = (currentIndex + 1) % images.length;
+          displayImage();
+        }
 
-      displayImage();
-    });
-  </script>
-</body>
+        $("#nextButton").click(nextImage);
+        $(document).keydown(function (event) {
+          if (event.key === "ArrowRight") {
+            nextImage();
+          }
+        });
+
+        $("#photo").on("error", function () {
+          $("#error").text(
+            "The selected image could not be loaded. Please try the next image.",
+          );
+        });
+
+        displayImage();
+      });
+    </script>
+  </body>
 </html>
