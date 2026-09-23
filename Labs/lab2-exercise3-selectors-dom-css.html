@@ -1,93 +1,176 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab 2 - Exercise 3: Selectors, DOM, and CSS</title>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 850px; margin: 35px auto; padding: 0 20px; background: #f8fafc; color: #1f2937; line-height: 1.55; }
-    main { background: #fff; border-radius: 10px; padding: 28px; box-shadow: 0 3px 12px rgba(0,0,0,.12); }
-    button { padding: 9px 12px; margin: 5px 4px 5px 0; border: 0; border-radius: 6px; color: white; background: #0f766e; cursor: pointer; }
-    button:hover { background: #115e59; }
-    .note { background: #ecfeff; border-left: 4px solid #0891b2; padding: 10px; }
-    #specialMessage { background: #fef3c7; padding: 10px; border-radius: 5px; }
-    #result { min-height: 24px; margin-top: 16px; padding: 12px; background: #f1f5f9; border-radius: 5px; }
-    #helpLink { color: #1d4ed8; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1 id="pageTitle">Exercise 3: jQuery Selectors, DOM, and CSS</h1>
-    <p class="note">This paragraph has the class <code>note</code>.</p>
-    <p id="specialMessage">This paragraph has the ID <code>specialMessage</code>.</p>
-    <p class="note">This is another paragraph with the class <code>note</code>.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 2 - Exercise 3: Selectors, DOM, and CSS</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 850px;
+        margin: 35px auto;
+        padding: 0 20px;
+        background: #f8fafc;
+        color: #1f2937;
+        line-height: 1.55;
+      }
+      main {
+        background: #fff;
+        border-radius: 10px;
+        padding: 28px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+      }
+      button {
+        padding: 9px 12px;
+        margin: 5px 4px 5px 0;
+        border: 0;
+        border-radius: 6px;
+        color: white;
+        background: #0f766e;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #115e59;
+      }
+      .note {
+        background: #ecfeff;
+        border-left: 4px solid #0891b2;
+        padding: 10px;
+      }
+      #specialMessage {
+        background: #fef3c7;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      #result {
+        min-height: 24px;
+        margin-top: 16px;
+        padding: 12px;
+        background: #f1f5f9;
+        border-radius: 5px;
+      }
+      #helpLink {
+        color: #1d4ed8;
+      }
 
-    <h2>Topics</h2>
-    <ul id="topicList">
-      <li>jQuery selectors</li>
-      <li>DOM manipulation</li>
-      <li>CSS manipulation</li>
-    </ul>
+      .back-button {
+        display: block;
+        width: fit-content;
+        margin-top: 18px;
+        padding: 10px 14px;
+        border-radius: 6px;
+        background: #6b7280;
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+      }
 
-    <p><a id="helpLink" href="https://jquery.com/" target="_blank">Visit the jQuery website</a></p>
+      .back-button:hover {
+        background: #4b5563;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 id="pageTitle">Exercise 3: jQuery Selectors, DOM, and CSS</h1>
+      <p class="note">This paragraph has the class <code>note</code>.</p>
+      <p id="specialMessage">
+        This paragraph has the ID <code>specialMessage</code>.
+      </p>
+      <p class="note">
+        This is another paragraph with the class <code>note</code>.
+      </p>
 
-    <h2>Controls</h2>
-    <button id="readText">Read Heading Text</button>
-    <button id="readHtml">Read List HTML</button>
-    <button id="changeText">Change ID Text</button>
-    <button id="readAttribute">Read Link URL</button>
-    <button id="changeAttribute">Change Link URL</button>
-    <button id="hideMessage">Hide ID Paragraph</button>
-    <button id="showMessage">Show ID Paragraph</button>
-    <button id="toggleNotes">Toggle Class Paragraphs</button>
-    <button id="styleElements">Apply CSS Changes</button>
+      <h2>Topics</h2>
+      <ul id="topicList">
+        <li>jQuery selectors</li>
+        <li>DOM manipulation</li>
+        <li>CSS manipulation</li>
+      </ul>
 
-    <div id="result" aria-live="polite">Use a button to test a jQuery selector, DOM method, visibility method, or CSS method.</div>
-  </main>
+      <p>
+        <a id="helpLink" href="https://jquery.com/" target="_blank"
+          >Visit the jQuery website</a
+        >
+      </p>
 
-  <script>
-    $(document).ready(function () {
-      $("#readText").click(function () {
-        $("#result").text("Heading text: " + $("#pageTitle").text());
+      <h2>Controls</h2>
+      <button id="readText">Read Heading Text</button>
+      <button id="readHtml">Read List HTML</button>
+      <button id="changeText">Change ID Text</button>
+      <button id="readAttribute">Read Link URL</button>
+      <button id="changeAttribute">Change Link URL</button>
+      <button id="hideMessage">Hide ID Paragraph</button>
+      <button id="showMessage">Show ID Paragraph</button>
+      <button id="toggleNotes">Toggle Class Paragraphs</button>
+      <button id="styleElements">Apply CSS Changes</button>
+
+      <div id="result" aria-live="polite">
+        Use a button to test a jQuery selector, DOM method, visibility method,
+        or CSS method.
+      </div>
+    </main>
+
+    <script>
+      $(document).ready(function () {
+        $("#readText").click(function () {
+          $("#result").text("Heading text: " + $("#pageTitle").text());
+        });
+
+        $("#readHtml").click(function () {
+          $("#result").text("List HTML: " + $("#topicList").html());
+        });
+
+        $("#changeText").click(function () {
+          $("#specialMessage").text(
+            "The text in this ID-selected paragraph was changed with jQuery.",
+          );
+          $("#result").text("The paragraph text was updated.");
+        });
+
+        $("#readAttribute").click(function () {
+          $("#result").text("Current link URL: " + $("#helpLink").attr("href"));
+        });
+
+        $("#changeAttribute").click(function () {
+          $("#helpLink")
+            .attr("href", "https://api.jquery.com/")
+            .text("Visit the jQuery API documentation");
+          $("#result").text("The link href and link text were updated.");
+        });
+
+        $("#hideMessage").click(function () {
+          $("#specialMessage").hide();
+        });
+
+        $("#showMessage").click(function () {
+          $("#specialMessage").show();
+        });
+
+        $("#toggleNotes").click(function () {
+          $(".note").toggle();
+        });
+
+        $("#styleElements").click(function () {
+          $("#pageTitle").css({
+            color: "white",
+            "background-color": "#7c3aed",
+            "font-size": "2.1rem",
+            padding: "12px",
+            border: "3px solid #4c1d95",
+          });
+          $(".note").css({
+            "background-color": "#dcfce7",
+            color: "#14532d",
+            border: "2px dashed #16a34a",
+            width: "85%",
+          });
+          $("#result").text(
+            "Multiple CSS properties were changed using jQuery.",
+          );
+        });
       });
-
-      $("#readHtml").click(function () {
-        $("#result").text("List HTML: " + $("#topicList").html());
-      });
-
-      $("#changeText").click(function () {
-        $("#specialMessage").text("The text in this ID-selected paragraph was changed with jQuery.");
-        $("#result").text("The paragraph text was updated.");
-      });
-
-      $("#readAttribute").click(function () {
-        $("#result").text("Current link URL: " + $("#helpLink").attr("href"));
-      });
-
-      $("#changeAttribute").click(function () {
-        $("#helpLink").attr("href", "https://api.jquery.com/").text("Visit the jQuery API documentation");
-        $("#result").text("The link href and link text were updated.");
-      });
-
-      $("#hideMessage").click(function () {
-        $("#specialMessage").hide();
-      });
-
-      $("#showMessage").click(function () {
-        $("#specialMessage").show();
-      });
-
-      $("#toggleNotes").click(function () {
-        $(".note").toggle();
-      });
-
-      $("#styleElements").click(function () {
-        $("#pageTitle").css({ "color": "white", "background-color": "#7c3aed", "font-size": "2.1rem", "padding": "12px", "border": "3px solid #4c1d95" });
-        $(".note").css({ "background-color": "#dcfce7", "color": "#14532d", "border": "2px dashed #16a34a", "width": "85%" });
-        $("#result").text("Multiple CSS properties were changed using jQuery.");
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
