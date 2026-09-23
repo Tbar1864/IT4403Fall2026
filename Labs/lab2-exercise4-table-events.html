@@ -1,65 +1,154 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab 2 - Exercise 4: Table Selection</title>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 850px; margin: 35px auto; padding: 0 20px; background: #f8fafc; color: #1f2937; }
-    main { background: white; padding: 28px; border-radius: 10px; box-shadow: 0 3px 12px rgba(0,0,0,.12); }
-    button { padding: 10px 14px; margin: 0 8px 15px 0; background: #b45309; color: white; border: 0; border-radius: 6px; cursor: pointer; }
-    button:hover { background: #92400e; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #cbd5e1; padding: 12px; text-align: left; }
-    th { background: #1e3a8a; color: white; }
-    tbody tr { cursor: pointer; }
-    tbody tr:hover { outline: 2px solid #f59e0b; }
-    .odd-row { background: #fef3c7; font-style: italic; }
-    #message { min-height: 22px; color: #334155; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Exercise 4: Table Selection and Event Handling</h1>
-    <p>Odd data rows are styled when the page loads. Click any data row to hide that specific row.</p>
-    <button id="hideOdd">Hide Odd Rows</button>
-    <button id="restoreRows">Restore All Rows</button>
-    <p id="message" aria-live="polite"></p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 2 - Exercise 4: Table Selection</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 850px;
+        margin: 35px auto;
+        padding: 0 20px;
+        background: #f8fafc;
+        color: #1f2937;
+      }
+      main {
+        background: white;
+        padding: 28px;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+      }
+      button {
+        padding: 10px 14px;
+        margin: 0 8px 15px 0;
+        background: #b45309;
+        color: white;
+        border: 0;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #92400e;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      th,
+      td {
+        border: 1px solid #cbd5e1;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background: #1e3a8a;
+        color: white;
+      }
+      tbody tr {
+        cursor: pointer;
+      }
+      tbody tr:hover {
+        outline: 2px solid #f59e0b;
+      }
+      .odd-row {
+        background: #fef3c7;
+        font-style: italic;
+      }
+      #message {
+        min-height: 22px;
+        color: #334155;
+      }
 
-    <table>
-      <thead>
-        <tr><th>Course</th><th>Topic</th><th>Status</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Web Development</td><td>HTML and CSS</td><td>Complete</td></tr>
-        <tr><td>Web Development</td><td>JavaScript</td><td>In Progress</td></tr>
-        <tr><td>Cloud Computing</td><td>Azure Storage</td><td>Complete</td></tr>
-        <tr><td>Networking</td><td>DNS Concepts</td><td>In Progress</td></tr>
-        <tr><td>Database Systems</td><td>SQL Queries</td><td>Planned</td></tr>
-      </tbody>
-    </table>
-  </main>
+      .back-button {
+        display: block;
+        width: fit-content;
+        margin-top: 18px;
+        padding: 10px 14px;
+        border-radius: 6px;
+        background: #6b7280;
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+      }
 
-  <script>
-    $(document).ready(function () {
-      $("tbody tr:odd").addClass("odd-row");
+      .back-button:hover {
+        background: #4b5563;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Exercise 4: Table Selection and Event Handling</h1>
+      <p>
+        Odd data rows are styled when the page loads. Click any data row to hide
+        that specific row.
+      </p>
+      <button id="hideOdd">Hide Odd Rows</button>
+      <button id="restoreRows">Restore All Rows</button>
+      <p id="message" aria-live="polite"></p>
 
-      $("#hideOdd").click(function () {
-        $("tbody tr:odd").hide();
-        $("#message").text("The odd data rows are hidden.");
+      <table>
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>Topic</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Web Development</td>
+            <td>HTML and CSS</td>
+            <td>Complete</td>
+          </tr>
+          <tr>
+            <td>Web Development</td>
+            <td>JavaScript</td>
+            <td>In Progress</td>
+          </tr>
+          <tr>
+            <td>Cloud Computing</td>
+            <td>Azure Storage</td>
+            <td>Complete</td>
+          </tr>
+          <tr>
+            <td>Networking</td>
+            <td>DNS Concepts</td>
+            <td>In Progress</td>
+          </tr>
+          <tr>
+            <td>Database Systems</td>
+            <td>SQL Queries</td>
+            <td>Planned</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <a class="back-button" href="../lab-work.html">← Back to Labs</a>
+    </main>
+
+    <script>
+      $(document).ready(function () {
+        $("tbody tr:odd").addClass("odd-row");
+
+        $("#hideOdd").click(function () {
+          $("tbody tr:odd").hide();
+          $("#message").text("The odd data rows are hidden.");
+        });
+
+        $("#restoreRows").click(function () {
+          $("tbody tr").show();
+          $("#message").text("All data rows have been restored.");
+        });
+
+        $("tbody tr").click(function () {
+          $(this).hide();
+          $("#message").text("The row you clicked is now hidden.");
+        });
       });
-
-      $("#restoreRows").click(function () {
-        $("tbody tr").show();
-        $("#message").text("All data rows have been restored.");
-      });
-
-      $("tbody tr").click(function () {
-        $(this).hide();
-        $("#message").text("The row you clicked is now hidden.");
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
