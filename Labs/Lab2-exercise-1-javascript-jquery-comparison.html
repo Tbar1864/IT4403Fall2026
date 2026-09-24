@@ -1,180 +1,238 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exercise 1: JavaScript and jQuery Comparison</title>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.5;
-      color: #172033;
-      background: #f4f7fb;
-    }
-    main {
-      width: min(1000px, calc(100% - 32px));
-      margin: 32px auto;
-      padding: 28px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 6px 22px rgba(23, 32, 51, 0.12);
-    }
-    h1 { margin-top: 0; color: #123b6d; }
-    h2 { color: #123b6d; margin-bottom: 8px; }
-    .intro { max-width: 760px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 18px;
-      margin-top: 22px;
-    }
-    section {
-      padding: 18px;
-      border: 1px solid #d8e1ef;
-      border-radius: 10px;
-      background: #fbfcff;
-    }
-    button {
-      margin: 4px 6px 8px 0;
-      padding: 9px 12px;
-      font: inherit;
-      font-weight: 700;
-      color: white;
-      background: #1769aa;
-      border: 0;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover, button:focus { background: #0c4f85; }
-    .output, #message, #box {
-      min-height: 48px;
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 6px;
-      background: #eaf2fb;
-    }
-    #box {
-      width: 100%;
-      min-height: 88px;
-      border: 2px solid #1769aa;
-      transition: all 0.25s ease;
-    }
-    .highlight {
-      background: #fff3bf !important;
-      color: #7a4700;
-      border-color: #f0a500 !important;
-      font-size: 1.15rem;
-      font-weight: 700;
-    }
-    ul { padding-left: 22px; }
-    code {
-      padding: 1px 4px;
-      color: #8b1e3f;
-      background: #f1f3f5;
-      border-radius: 4px;
-    }
-    footer {
-      margin-top: 24px;
-      padding-top: 14px;
-      border-top: 1px solid #d8e1ef;
-      color: #4b5563;
-    }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Exercise 1: JavaScript and jQuery Comparison</h1>
-    <p class="intro">This page practices common tasks in both traditional JavaScript and jQuery: calculations, loops, functions, DOM updates, click events, and CSS manipulation.</p>
-
-    <div class="grid">
-      <section>
-        <h2>1. Calculation and Output</h2>
-        <p>Click the button to add 12 and 8 and display the result.</p>
-        <button id="calculateButton">Run Calculation</button>
-        <div class="output" id="calculationOutput">The result will appear here.</div>
-      </section>
-
-      <section>
-        <h2>2. Loop and Output</h2>
-        <p>Click the button to use a loop to create a list of five items.</p>
-        <button id="loopButton">Create List</button>
-        <div class="output" id="loopOutput">The list will appear here.</div>
-      </section>
-
-      <section>
-        <h2>3. Function and DOM Update</h2>
-        <p>Click the button to call a function that changes page content.</p>
-        <button id="messageButton">Change Message</button>
-        <p id="message">This is the original message.</p>
-      </section>
-
-      <section>
-        <h2>4. Click Event</h2>
-        <p>Click the button to update the paragraph using jQuery.</p>
-        <button id="eventButton">Update Paragraph</button>
-        <p id="eventParagraph">Waiting for a click event.</p>
-      </section>
-
-      <section>
-        <h2>5. CSS Manipulation</h2>
-        <p>Click the button to add or remove a CSS class with jQuery.</p>
-        <button id="styleButton">Toggle Style</button>
-        <div id="box">This box changes color, border, text size, and weight.</div>
-      </section>
-
-      <section>
-        <h2>6. Traditional JavaScript Example</h2>
-        <p>This button demonstrates the equivalent DOM update with traditional JavaScript.</p>
-        <button id="javascriptButton">Use JavaScript</button>
-        <p id="javascriptParagraph">This text will be changed by JavaScript.</p>
-      </section>
-    </div>
-
-    <footer>
-      <strong>Comparison notes:</strong> jQuery uses selectors such as <code>$("#message")</code>, concise event methods such as <code>.on("click", ...)</code>, and methods such as <code>.text()</code>, <code>.html()</code>, and <code>.toggleClass()</code> to work with page elements.
-    </footer>
-  </main>
-
-  <script>
-    $(document).ready(function () {
-      $("#calculateButton").on("click", function () {
-        const firstNumber = 12;
-        const secondNumber = 8;
-        const total = firstNumber + secondNumber;
-        $("#calculationOutput").text(firstNumber + " + " + secondNumber + " = " + total);
-      });
-
-      $("#loopButton").on("click", function () {
-        let listItems = "<ul>";
-        for (let number = 1; number <= 5; number++) {
-          listItems += "<li>Loop item " + number + "</li>";
-        }
-        listItems += "</ul>";
-        $("#loopOutput").html(listItems);
-      });
-
-      function displayMessage() {
-        $("#message").text("The function ran and changed this message with jQuery.");
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercise 1: JavaScript and jQuery Comparison</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.5;
+        color: #172033;
+        background: #f4f7fb;
+      }
+      main {
+        width: min(1000px, calc(100% - 32px));
+        margin: 32px auto;
+        padding: 28px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 22px rgba(23, 32, 51, 0.12);
+      }
+      h1 {
+        margin-top: 0;
+        color: #123b6d;
+      }
+      h2 {
+        color: #123b6d;
+        margin-bottom: 8px;
+      }
+      .intro {
+        max-width: 760px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 18px;
+        margin-top: 22px;
+      }
+      section {
+        padding: 18px;
+        border: 1px solid #d8e1ef;
+        border-radius: 10px;
+        background: #fbfcff;
+      }
+      button {
+        margin: 4px 6px 8px 0;
+        padding: 9px 12px;
+        font: inherit;
+        font-weight: 700;
+        color: white;
+        background: #1769aa;
+        border: 0;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button:hover,
+      button:focus {
+        background: #0c4f85;
+      }
+      .output,
+      #message,
+      #box {
+        min-height: 48px;
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 6px;
+        background: #eaf2fb;
+      }
+      #box {
+        width: 100%;
+        min-height: 88px;
+        border: 2px solid #1769aa;
+        transition: all 0.25s ease;
+      }
+      .highlight {
+        background: #fff3bf !important;
+        color: #7a4700;
+        border-color: #f0a500 !important;
+        font-size: 1.15rem;
+        font-weight: 700;
+      }
+      ul {
+        padding-left: 22px;
+      }
+      code {
+        padding: 1px 4px;
+        color: #8b1e3f;
+        background: #f1f3f5;
+        border-radius: 4px;
+      }
+      footer {
+        margin-top: 24px;
+        padding-top: 14px;
+        border-top: 1px solid #d8e1ef;
+        color: #4b5563;
       }
 
-      $("#messageButton").on("click", displayMessage);
+      .back-button {
+        display: block;
+        width: fit-content;
+        margin-top: 18px;
+        padding: 10px 14px;
+        border-radius: 6px;
+        background: #6b7280;
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+      }
 
-      $("#eventButton").on("click", function () {
-        $("#eventParagraph").text("The click event was handled with jQuery.");
-      });
+      .back-button:hover {
+        background: #4b5563;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Exercise 1: JavaScript and jQuery Comparison</h1>
+      <p class="intro">
+        This page practices common tasks in both traditional JavaScript and
+        jQuery: calculations, loops, functions, DOM updates, click events, and
+        CSS manipulation.
+      </p>
 
-      $("#styleButton").on("click", function () {
-        $("#box").toggleClass("highlight");
-      });
+      <div class="grid">
+        <section>
+          <h2>1. Calculation and Output</h2>
+          <p>Click the button to add 12 and 8 and display the result.</p>
+          <button id="calculateButton">Run Calculation</button>
+          <div class="output" id="calculationOutput">
+            The result will appear here.
+          </div>
+        </section>
 
-      document.getElementById("javascriptButton").addEventListener("click", function () {
-        document.getElementById("javascriptParagraph").textContent =
-          "This paragraph was updated with traditional JavaScript.";
+        <section>
+          <h2>2. Loop and Output</h2>
+          <p>Click the button to use a loop to create a list of five items.</p>
+          <button id="loopButton">Create List</button>
+          <div class="output" id="loopOutput">The list will appear here.</div>
+        </section>
+
+        <section>
+          <h2>3. Function and DOM Update</h2>
+          <p>Click the button to call a function that changes page content.</p>
+          <button id="messageButton">Change Message</button>
+          <p id="message">This is the original message.</p>
+        </section>
+
+        <section>
+          <h2>4. Click Event</h2>
+          <p>Click the button to update the paragraph using jQuery.</p>
+          <button id="eventButton">Update Paragraph</button>
+          <p id="eventParagraph">Waiting for a click event.</p>
+        </section>
+
+        <section>
+          <h2>5. CSS Manipulation</h2>
+          <p>Click the button to add or remove a CSS class with jQuery.</p>
+          <button id="styleButton">Toggle Style</button>
+          <div id="box">
+            This box changes color, border, text size, and weight.
+          </div>
+        </section>
+
+        <section>
+          <h2>6. Traditional JavaScript Example</h2>
+          <p>
+            This button demonstrates the equivalent DOM update with traditional
+            JavaScript.
+          </p>
+          <button id="javascriptButton">Use JavaScript</button>
+          <p id="javascriptParagraph">
+            This text will be changed by JavaScript.
+          </p>
+        </section>
+      </div>
+
+      <footer>
+        <strong>Comparison notes:</strong> jQuery uses selectors such as
+        <code>$("#message")</code>, concise event methods such as
+        <code>.on("click", ...)</code>, and methods such as
+        <code>.text()</code>, <code>.html()</code>, and
+        <code>.toggleClass()</code> to work with page elements.
+      </footer>
+
+      <a class="back-button" href="../lab-work.html">← Back to Labs</a>
+    </main>
+
+    <script>
+      $(document).ready(function () {
+        $("#calculateButton").on("click", function () {
+          const firstNumber = 12;
+          const secondNumber = 8;
+          const total = firstNumber + secondNumber;
+          $("#calculationOutput").text(
+            firstNumber + " + " + secondNumber + " = " + total,
+          );
+        });
+
+        $("#loopButton").on("click", function () {
+          let listItems = "<ul>";
+          for (let number = 1; number <= 5; number++) {
+            listItems += "<li>Loop item " + number + "</li>";
+          }
+          listItems += "</ul>";
+          $("#loopOutput").html(listItems);
+        });
+
+        function displayMessage() {
+          $("#message").text(
+            "The function ran and changed this message with jQuery.",
+          );
+        }
+
+        $("#messageButton").on("click", displayMessage);
+
+        $("#eventButton").on("click", function () {
+          $("#eventParagraph").text("The click event was handled with jQuery.");
+        });
+
+        $("#styleButton").on("click", function () {
+          $("#box").toggleClass("highlight");
+        });
+
+        document
+          .getElementById("javascriptButton")
+          .addEventListener("click", function () {
+            document.getElementById("javascriptParagraph").textContent =
+              "This paragraph was updated with traditional JavaScript.";
+          });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
