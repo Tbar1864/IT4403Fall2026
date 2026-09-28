@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 3 Exercise 5: Weather JSON</title>
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f4f7fb; color: #18212b; line-height: 1.6; }
+    main { width: min(900px, 92%); margin: 2rem auto; padding: 2rem; background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; }
+    h1, h2, h3 { color: #12355b; } #output { padding: 1rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 7px; }
+    .label { font-weight: bold; color: #12355b; }
+    .back { display: inline-block; margin-top: 1rem; padding: .65rem 1rem; background: #12355b; color: #fff; text-decoration: none; border-radius: 5px; }
+    .back:hover { background: #1f6aa5; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Lab 3: JSON</h1>
+    <h2>Exercise 5: Read and Display JSON from a File</h2>
+    <p>This page retrieves the professor-provided <code>weather.json</code> file and displays selected weather information instead of the raw JSON data.</p>
+    <div id="output" aria-live="polite">Loading weather data...</div>
+    <a class="back" href="../lab-work.html">Back to Labs</a>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    $(function () {
+      $.getJSON("weather.json")
+        .done(function (data) {
+          const condition = data.weather[0];
+          const html = `<h3>Current Weather: ${data.name}, ${data.sys.country}</h3>
+            <p><span class="label">Coordinates:</span> ${data.coord.lat}, ${data.coord.lon}<br>
+            <span class="label">Temperature:</span> ${data.main.temp} K<br>
+            <span class="label">Conditions:</span> ${condition.main} — ${condition.description}<br>
+            <span class="label">Humidity:</span> ${data.main.humidity}%<br>
+            <span class="label">Pressure:</span> ${data.main.pressure} hPa<br>
+            <span class="label">Wind:</span> ${data.wind.speed} m/s at ${data.wind.deg}°<br>
+            <span class="label">Cloudiness:</span> ${data.clouds.all}%</p>`;
+          $("#output").html(html);
+        })
+        .fail(function () {
+          $("#output").html("<p><strong>Unable to load weather.json.</strong> Confirm that weather.json is in the same lab3 folder as this HTML page and view the page through your published website.</p>");
+        });
+    });
+  </script>
+</body>
+</html>
