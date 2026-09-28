@@ -1,0 +1,20 @@
+[
+    {
+        "@HireDate": "2011-08-01",
+        "FirstName": "Jack",
+        "LastName": "Zheng",
+        "Title": "Assistant Professor"
+    },
+    {
+        "@HireDate": "2011-08-01",
+        "FirstName": "Ming",
+        "LastName": "Yang",
+        "Title": "Associate Professor"
+    },
+    {
+        "@HireDate": "2013-08-01",
+        "FirstName": "Lei",
+        "LastName": "Li",
+        "Title": "Associate Professor"
+    }
+]

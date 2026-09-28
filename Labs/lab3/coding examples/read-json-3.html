@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>PHP simple JSON JavaScript</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+</head>
+
+<body>
+
+<h1>Read JSON content 3</h1>
+<ul>
+    <li>Use jQuery getJSON function to get the JSON file from the server (make sure the server serves .json files)</li>
+    <li>Using jQuery/JS to process JSON</li>
+</ul>
+
+<p>The JSON file can be viewed here: <a href="instructor3.json" target="_blank">instructor3.json</a></p>
+<h2>Reading results</h2>
+<div id="Instructor"></div>
+<div id="Course"></div>
+
+<script>
+    $(function(){
+        $.getJSON("instructor3.json", function (json) //json is the parameter name to hold the response data and it will be converted to a JS object by the function
+            {
+                $("#Instructor").html(json.Instructor.FirstName+" - "+json.Instructor.Title + " - " + json.Instructor["@HireDate"]); //@HireDate has a special charater @
+
+            var courseHTML="";
+
+            for (i in json.Instructor.Course)
+            {
+                courseHTML+="<br>"+json.Instructor.Course[i].Title+ " - " +json.Instructor.Course[i].Enrollment;
+            }
+            $("#Course").html(courseHTML);
+            }); 
+    })
+</script>
+
+</body>
+</html>

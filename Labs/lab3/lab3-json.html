@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 3: JSON</title>
+  <style>
+    :root { --navy: #12355b; --blue: #1f6aa5; --light: #f4f7fb; --ink: #18212b; --border: #cbd5e1; --white: #fff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--ink); background: var(--light); line-height: 1.55; }
+    header { padding: 2.5rem 1.25rem; color: var(--white); background: linear-gradient(135deg, var(--navy), var(--blue)); text-align: center; }
+    header h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); }
+    header p { margin: .5rem 0 0; }
+    main { width: min(1050px, 92%); margin: 2rem auto 3rem; }
+    section { background: var(--white); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 1.5rem; padding: 1.5rem; box-shadow: 0 2px 7px rgba(15, 23, 42, .06); }
+    h2 { color: var(--navy); margin-top: 0; }
+    h3 { color: var(--blue); }
+    code { color: #8a1c1c; }
+    pre { overflow-x: auto; margin: 1rem 0; padding: 1rem; color: #e5eef8; background: #142233; border-radius: 7px; line-height: 1.4; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .card { padding: 1rem; border-left: 5px solid var(--blue); background: #eef6fc; border-radius: 5px; }
+    .output { padding: 1rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 7px; }
+    .book-list, .course-list, .cast-list { padding-left: 1.25rem; }
+    .book-list li, .course-list li, .cast-list li { margin-bottom: .65rem; }
+    .label { font-weight: bold; color: var(--navy); }
+    .poster { max-width: 220px; width: 100%; height: auto; border-radius: 7px; border: 1px solid var(--border); }
+    footer { text-align: center; color: #475569; padding: 0 1rem 2rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Lab 3: JSON</h1>
+    <p>JSON structure, validation, JavaScript, jQuery, nested data, and file-based JSON.</p>
+  </header>
+
+  <main>
+    <section id="exercise1">
+      <h2>Exercise 1: Explore and Understand JSON Structure</h2>
+      <p>JSON organizes data using objects, arrays, and name/value pairs. The provided instructor examples show each of these structures. For example, <code>instructor1.json</code> has a top-level <code>Instructor</code> object, while <code>instructor2a.json</code> contains an <code>Instructors</code> array. <code>instructor3.json</code> places a <code>Course</code> array inside an Instructor object.</p>
+      <div class="grid">
+        <div class="card"><strong>Name/value pair</strong><br><code>"FirstName": "Jack"</code></div>
+        <div class="card"><strong>Object</strong><br><code>"Instructor": { ... }</code></div>
+        <div class="card"><strong>Array</strong><br><code>"Course": [ ... ]</code></div>
+        <div class="card"><strong>Nested structure</strong><br><code>"Instructor": { "Course": [ ... ] }</code></div>
+      </div>
+      <p>In the instructor examples, simple values include text such as an instructor’s first name, last name, and title, plus numeric enrollment values. The collection values are arrays of instructors or courses. The nested structures connect related data—for example, the instructor object contains the course array.</p>
+      <pre>{
+  "Instructor": {
+    "FirstName": "Jack",
+    "LastName": "Zheng",
+    "Course": [
+      { "Title": "IT6713", "Enrollment": 18 }
+    ]
+  }
+}</pre>
+    </section>
+
+    <section id="exercise2">
+      <h2>Exercise 2: Create and Validate JSON</h2>
+      <h3>Part A: Message JSON</h3>
+      <pre id="message-json"></pre>
+      <h3>Part B: Book Collection JSON</h3>
+      <pre id="books-json"></pre>
+      <p>The property names and text values use double quotation marks, the properties are separated by commas, and the object and array delimiters are correctly paired. This makes both examples valid JSON.</p>
+    </section>
+
+    <section id="exercise3">
+      <h2>Exercise 3: Read JSON Values Using JavaScript and jQuery</h2>
+      <div id="book-output" class="output"></div>
+    </section>
+
+    <section id="exercise4">
+      <h2>Exercise 4: Work with Nested JSON Data</h2>
+      <div id="student-output" class="output"></div>
+    </section>
+
+    <section id="exercise5">
+      <h2>Exercise 5: Read and Display JSON from a File</h2>
+      <p>This section reads the professor-provided <code>weather.json</code> file with <code>fetch()</code>. Its main sections include <code>coord</code>, <code>weather</code>, <code>main</code>, <code>wind</code>, <code>clouds</code>, and <code>sys</code>. The <code>weather</code> value is an array, while <code>main</code>, <code>wind</code>, and <code>sys</code> are nested objects.</p>
+      <div id="weather-output" class="output" aria-live="polite">Loading weather data...</div>
+    </section>
+
+    <section id="exercise6">
+      <h2>Exercise 6: Movie Information Page</h2>
+      <p>This section reads the professor-provided <code>movie.json</code> file with <code>fetch()</code>. It uses arrays for genres and cast members, and nested objects for release dates, ratings, posters, alternate IDs, and links.</p>
+      <div id="movie-output" class="output" aria-live="polite">Loading movie data...</div>
+    </section>
+  </main>
+
+  <footer>Lab 3: JSON completed with JavaScript and jQuery.</footer>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    const message = {
+      to: "Alex",
+      from: "Jordan",
+      heading: "Reminder",
+      body: "Don't forget our meeting tomorrow."
+    };
+
+    const bookCollection = {
+      books: [
+        { title: "Web Development Basics", author: "Maya Lee", price: 29.99 },
+        { title: "Modern JavaScript", author: "Daniel Kim", price: 34.50 },
+        { title: "Understanding JSON", author: "Sofia Patel", price: 24.95 }
+      ]
+    };
+
+    const student = {
+      name: "Jordan Taylor",
+      major: "Information Technology",
+      email: "jordan.taylor@example.com",
+      courses: [
+        { code: "IT 3203", title: "Advanced Web Development", credits: 3 },
+        { code: "IT 4213", title: "Mobile Application Development", credits: 3 },
+        { code: "IT 3123", title: "Systems Analysis and Design", credits: 3 }
+      ]
+    };
+
+    $(function () {
+      $("#message-json").text(JSON.stringify(message, null, 2));
+      $("#books-json").text(JSON.stringify(bookCollection, null, 2));
+
+      const firstBook = bookCollection.books[0];
+      let bookHtml = "<h3>First Book</h3>";
+      bookHtml += `<p><span class="label">Title:</span> ${firstBook.title}<br>`;
+      bookHtml += `<span class="label">Author:</span> ${firstBook.author}<br>`;
+      bookHtml += `<span class="label">Price:</span> $${firstBook.price.toFixed(2)}</p>`;
+      bookHtml += `<h3>All Books (${bookCollection.books.length})</h3><ul class="book-list">`;
+      bookCollection.books.forEach(function (book) {
+        bookHtml += `<li><span class="label">${book.title}</span> by ${book.author} — $${book.price.toFixed(2)}</li>`;
+      });
+      bookHtml += "</ul>";
+      $("#book-output").html(bookHtml);
+
+      let studentHtml = `<p><span class="label">Student name:</span> ${student.name}<br>`;
+      studentHtml += `<span class="label">Major:</span> ${student.major}<br>`;
+      studentHtml += `<span class="label">Email:</span> ${student.email}</p>`;
+      studentHtml += "<h3>Courses</h3><ul class=\"course-list\">";
+      student.courses.forEach(function (course) {
+        studentHtml += `<li><span class="label">${course.code}</span>: ${course.title} (${course.credits} credit hours)</li>`;
+      });
+      studentHtml += "</ul>";
+      $("#student-output").html(studentHtml);
+
+      loadWeather();
+      loadMovie();
+    });
+
+    async function loadWeather() {
+      const output = $("#weather-output");
+      try {
+        const response = await fetch("weather.json");
+        if (!response.ok) throw new Error("weather.json was not found");
+        const data = await response.json();
+        const condition = data.weather[0];
+        output.html(`<h3>Current Weather: ${data.name}, ${data.sys.country}</h3>
+          <p><span class="label">Coordinates:</span> ${data.coord.lat}, ${data.coord.lon}<br>
+          <span class="label">Temperature:</span> ${data.main.temp} K<br>
+          <span class="label">Conditions:</span> ${condition.main} — ${condition.description}<br>
+          <span class="label">Humidity:</span> ${data.main.humidity}%<br>
+          <span class="label">Pressure:</span> ${data.main.pressure} hPa<br>
+          <span class="label">Wind:</span> ${data.wind.speed} m/s at ${data.wind.deg}°<br>
+          <span class="label">Cloudiness:</span> ${data.clouds.all}%</p>`);
+      } catch (error) {
+        output.html("<p><strong>Weather file needed:</strong> Keep weather.json in the same folder as this webpage and open the webpage through your public web host.</p>");
+      }
+    }
+
+    async function loadMovie() {
+      const output = $("#movie-output");
+      try {
+        const response = await fetch("movie.json");
+        if (!response.ok) throw new Error("movie.json was not found");
+        const data = await response.json();
+        const genreList = data.genres.map(genre => genre).join(", ");
+        let castHtml = "";
+        data.abridged_cast.forEach(function (actor) {
+          castHtml += `<li><span class="label">${actor.name}</span> as ${actor.characters.join(", ")}</li>`;
+        });
+        output.html(`<h3>${data.title} (${data.year})</h3>
+          <img class="poster" src="${data.posters.profile}" alt="Poster for ${data.title}">
+          <p><span class="label">MPAA rating:</span> ${data.mpaa_rating}<br>
+          <span class="label">Runtime:</span> ${data.runtime} minutes<br>
+          <span class="label">Genres:</span> ${genreList}<br>
+          <span class="label">Studio:</span> ${data.studio}<br>
+          <span class="label">Theater release:</span> ${data.release_dates.theater}<br>
+          <span class="label">DVD release:</span> ${data.release_dates.dvd}<br>
+          <span class="label">Critics rating:</span> ${data.ratings.critics_rating} (${data.ratings.critics_score}%)<br>
+          <span class="label">Audience rating:</span> ${data.ratings.audience_rating} (${data.ratings.audience_score}%)</p>
+          <p><span class="label">Critics consensus:</span> ${data.critics_consensus}</p>
+          <p><span class="label">Synopsis:</span> ${data.synopsis}</p>
+          <h3>Cast</h3><ul class="cast-list">${castHtml}</ul>`);
+      } catch (error) {
+        output.html("<p><strong>Movie file needed:</strong> Keep movie.json in the same folder as this webpage and open the webpage through your public web host.</p>");
+      }
+    }
+  </script>
+</body>
+</html>

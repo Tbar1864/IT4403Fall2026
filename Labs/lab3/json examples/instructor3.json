@@ -1,0 +1,20 @@
+{
+	"Instructor": 
+	{
+        "@HireDate": "2011-08-01",
+        "FirstName": "Jack",
+        "LastName": "Zheng",
+        "Title": "Assistant Professor",
+        "Course":
+        [
+            {
+				"Title": "IT6713",
+				"Enrollment": 18
+			},
+            {
+				"Title": "IT6753",
+				"Enrollment": 22
+            }
+         ]
+    }
+}
