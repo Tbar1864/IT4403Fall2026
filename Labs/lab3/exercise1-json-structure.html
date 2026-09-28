@@ -1,34 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab 3 Exercise 1: JSON Structure</title>
-  <style>
-    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f4f7fb; color: #18212b; line-height: 1.6; }
-    main { width: min(900px, 92%); margin: 2rem auto; padding: 2rem; background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; }
-    h1, h2 { color: #12355b; } .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; }
-    .card { padding: 1rem; background: #eef6fc; border-left: 5px solid #1f6aa5; border-radius: 5px; }
-    pre { overflow-x: auto; padding: 1rem; background: #142233; color: #e5eef8; border-radius: 7px; }
-    code { color: #8a1c1c; } pre code { color: inherit; }
-    .back { display: inline-block; margin-top: 1rem; padding: .65rem 1rem; background: #12355b; color: #fff; text-decoration: none; border-radius: 5px; }
-    .back:hover { background: #1f6aa5; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Lab 3: JSON</h1>
-    <h2>Exercise 1: JSON Structure Exploration</h2>
-    <p>JSON is organized with objects, arrays, and name/value pairs. The instructor examples include a top-level <code>Instructor</code> object, an <code>Instructors</code> array, and a nested <code>Course</code> array inside an instructor object.</p>
-    <div class="grid">
-      <div class="card"><strong>Name/value pair</strong><br><code>"FirstName": "Jack"</code></div>
-      <div class="card"><strong>Object</strong><br><code>"Instructor": { ... }</code></div>
-      <div class="card"><strong>Array</strong><br><code>"Course": [ ... ]</code></div>
-      <div class="card"><strong>Nested structure</strong><br><code>"Instructor": { "Course": [ ... ] }</code></div>
-    </div>
-    <h2>Organization Summary</h2>
-    <p>Simple values include text values such as an instructor name and job title, along with numeric enrollment values. Collections are stored in arrays. Nested objects and arrays group related information together—for example, course information belonging to an instructor.</p>
-    <pre><code>{
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 3 Exercise 1: JSON Structure</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f7fb;
+        color: #18212b;
+        line-height: 1.6;
+      }
+      main {
+        width: min(900px, 92%);
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+      }
+      h1,
+      h2 {
+        color: #12355b;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 1rem;
+      }
+      .card {
+        padding: 1rem;
+        background: #eef6fc;
+        border-left: 5px solid #1f6aa5;
+        border-radius: 5px;
+      }
+      pre {
+        overflow-x: auto;
+        padding: 1rem;
+        background: #142233;
+        color: #e5eef8;
+        border-radius: 7px;
+      }
+      code {
+        color: #8a1c1c;
+      }
+      pre code {
+        color: inherit;
+      }
+      .back {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.65rem 1rem;
+        background: #12355b;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+      .back:hover {
+        background: #1f6aa5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Lab 3: JSON</h1>
+      <h2>Exercise 1: JSON Structure Exploration</h2>
+      <p>
+        JSON is organized with objects, arrays, and name/value pairs. The
+        instructor examples include a top-level <code>Instructor</code> object,
+        an <code>Instructors</code> array, and a nested
+        <code>Course</code> array inside an instructor object.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <strong>Name/value pair</strong><br /><code>"FirstName": "Jack"</code>
+        </div>
+        <div class="card">
+          <strong>Object</strong><br /><code>"Instructor": { ... }</code>
+        </div>
+        <div class="card">
+          <strong>Array</strong><br /><code>"Course": [ ... ]</code>
+        </div>
+        <div class="card">
+          <strong>Nested structure</strong><br /><code
+            >"Instructor": { "Course": [ ... ] }</code
+          >
+        </div>
+      </div>
+      <h2>Organization Summary</h2>
+      <p>
+        Simple values include text values such as an instructor name and job
+        title, along with numeric enrollment values. Collections are stored in
+        arrays. Nested objects and arrays group related information together—for
+        example, course information belonging to an instructor.
+      </p>
+      <pre><code>{
   "Instructor": {
     "FirstName": "Jack",
     "LastName": "Zheng",
@@ -39,7 +106,7 @@
     ]
   }
 }</code></pre>
-    <a class="back" href="../lab-work.html">Back to Labs</a>
-  </main>
-</body>
+      <a class="back-button" href="../lab-work.html">Back to Labs</a>
+    </main>
+  </body>
 </html>
