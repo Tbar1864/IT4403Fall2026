@@ -1,50 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab 3 Exercise 3: Read JSON Values</title>
-  <style>
-    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f4f7fb; color: #18212b; line-height: 1.6; }
-    main { width: min(900px, 92%); margin: 2rem auto; padding: 2rem; background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; }
-    h1, h2, h3 { color: #12355b; } #output { padding: 1rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 7px; }
-    .label { font-weight: bold; color: #12355b; } li { margin-bottom: .5rem; }
-    .back { display: inline-block; margin-top: 1rem; padding: .65rem 1rem; background: #12355b; color: #fff; text-decoration: none; border-radius: 5px; }
-    .back:hover { background: #1f6aa5; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Lab 3: JSON</h1>
-    <h2>Exercise 3: Read JSON Values Using JavaScript and jQuery</h2>
-    <p>This page stores the Exercise 2 book data as a JavaScript object. JavaScript and jQuery access individual values and use a loop to display every book dynamically.</p>
-    <div id="output"></div>
-    a class="back" href="../../lab-work.html">← Back to Labs</a>
-  </main>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 3 Exercise 3: Read JSON Values</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f7fb;
+        color: #18212b;
+        line-height: 1.6;
+      }
+      main {
+        width: min(900px, 92%);
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #12355b;
+      }
+      #output {
+        padding: 1rem;
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-radius: 7px;
+      }
+      .label {
+        font-weight: bold;
+        color: #12355b;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+      .back {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.65rem 1rem;
+        background: #12355b;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+      .back:hover {
+        background: #1f6aa5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Lab 3: JSON</h1>
+      <h2>Exercise 3: Read JSON Values Using JavaScript and jQuery</h2>
+      <p>
+        This page stores the Exercise 2 book data as a JavaScript object.
+        JavaScript and jQuery access individual values and use a loop to display
+        every book dynamically.
+      </p>
+      <div id="output"></div>
+      <a class="back" href="../../lab-work.html">← Back to Labs</a>
+    </main>
 
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script>
-    const bookCollection = {
-      books: [
-        { title: "Web Development Basics", author: "Maya Lee", price: 29.99 },
-        { title: "Modern JavaScript", author: "Daniel Kim", price: 34.50 },
-        { title: "Understanding JSON", author: "Sofia Patel", price: 24.95 }
-      ]
-    };
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+      const bookCollection = {
+        books: [
+          { title: "Web Development Basics", author: "Maya Lee", price: 29.99 },
+          { title: "Modern JavaScript", author: "Daniel Kim", price: 34.5 },
+          { title: "Understanding JSON", author: "Sofia Patel", price: 24.95 },
+        ],
+      };
 
-    $(function () {
-      const firstBook = bookCollection.books[0];
-      let html = "<h3>First Book</h3>";
-      html += `<p><span class="label">Title:</span> ${firstBook.title}<br>`;
-      html += `<span class="label">Author:</span> ${firstBook.author}<br>`;
-      html += `<span class="label">Price:</span> $${firstBook.price.toFixed(2)}</p>`;
-      html += `<h3>All Books (${bookCollection.books.length})</h3><ul>`;
-      bookCollection.books.forEach(function (book) {
-        html += `<li><span class="label">${book.title}</span> by ${book.author} — $${book.price.toFixed(2)}</li>`;
+      $(function () {
+        const firstBook = bookCollection.books[0];
+        let html = "<h3>First Book</h3>";
+        html += `<p><span class="label">Title:</span> ${firstBook.title}<br>`;
+        html += `<span class="label">Author:</span> ${firstBook.author}<br>`;
+        html += `<span class="label">Price:</span> $${firstBook.price.toFixed(2)}</p>`;
+        html += `<h3>All Books (${bookCollection.books.length})</h3><ul>`;
+        bookCollection.books.forEach(function (book) {
+          html += `<li><span class="label">${book.title}</span> by ${book.author} — $${book.price.toFixed(2)}</li>`;
+        });
+        html += "</ul>";
+        $("#output").html(html);
       });
-      html += "</ul>";
-      $("#output").html(html);
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
