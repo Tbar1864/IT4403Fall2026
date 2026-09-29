@@ -1,47 +1,92 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab 3 Exercise 2: Create and Validate JSON</title>
-  <style>
-    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f4f7fb; color: #18212b; line-height: 1.6; }
-    main { width: min(900px, 92%); margin: 2rem auto; padding: 2rem; background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; }
-    h1, h2 { color: #12355b; } pre { overflow-x: auto; padding: 1rem; background: #142233; color: #e5eef8; border-radius: 7px; }
-    .back { display: inline-block; margin-top: 1rem; padding: .65rem 1rem; background: #12355b; color: #fff; text-decoration: none; border-radius: 5px; }
-    .back:hover { background: #1f6aa5; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Lab 3: JSON</h1>
-    <h2>Exercise 2: Create and Validate JSON</h2>
-    <h2>Part A: Message JSON</h2>
-    <pre id="message-json"></pre>
-    <h2>Part B: Book Collection JSON</h2>
-    <pre id="books-json"></pre>
-    <h2>Validation Check</h2>
-    <p>Both examples use double quotes around property names and text values, commas between properties and array items, matching braces for objects, and matching brackets for arrays. The JSON is valid.</p>
-    a class="back" href="../../lab-work.html">← Back to Labs</a>
-  </main>
-  <script>
-    const message = {
-      "to": "Alex",
-      "from": "Jordan",
-      "heading": "Reminder",
-      "body": "Don't forget our meeting tomorrow."
-    };
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 3 Exercise 2: Create and Validate JSON</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f7fb;
+        color: #18212b;
+        line-height: 1.6;
+      }
+      main {
+        width: min(900px, 92%);
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+      }
+      h1,
+      h2 {
+        color: #12355b;
+      }
+      pre {
+        overflow-x: auto;
+        padding: 1rem;
+        background: #142233;
+        color: #e5eef8;
+        border-radius: 7px;
+      }
+      .back {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.65rem 1rem;
+        background: #12355b;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+      .back:hover {
+        background: #1f6aa5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Lab 3: JSON</h1>
+      <h2>Exercise 2: Create and Validate JSON</h2>
+      <h2>Part A: Message JSON</h2>
+      <pre id="message-json"></pre>
+      <h2>Part B: Book Collection JSON</h2>
+      <pre id="books-json"></pre>
+      <h2>Validation Check</h2>
+      <p>
+        Both examples use double quotes around property names and text values,
+        commas between properties and array items, matching braces for objects,
+        and matching brackets for arrays. The JSON is valid.
+      </p>
+      <a class="back" href="../../lab-work.html">← Back to Labs</a>
+    </main>
+    <script>
+      const message = {
+        to: "Alex",
+        from: "Jordan",
+        heading: "Reminder",
+        body: "Don't forget our meeting tomorrow.",
+      };
 
-    const bookCollection = {
-      "books": [
-        { "title": "Web Development Basics", "author": "Maya Lee", "price": 29.99 },
-        { "title": "Modern JavaScript", "author": "Daniel Kim", "price": 34.50 },
-        { "title": "Understanding JSON", "author": "Sofia Patel", "price": 24.95 }
-      ]
-    };
+      const bookCollection = {
+        books: [
+          { title: "Web Development Basics", author: "Maya Lee", price: 29.99 },
+          { title: "Modern JavaScript", author: "Daniel Kim", price: 34.5 },
+          { title: "Understanding JSON", author: "Sofia Patel", price: 24.95 },
+        ],
+      };
 
-    document.getElementById("message-json").textContent = JSON.stringify(message, null, 2);
-    document.getElementById("books-json").textContent = JSON.stringify(bookCollection, null, 2);
-  </script>
-</body>
+      document.getElementById("message-json").textContent = JSON.stringify(
+        message,
+        null,
+        2,
+      );
+      document.getElementById("books-json").textContent = JSON.stringify(
+        bookCollection,
+        null,
+        2,
+      );
+    </script>
+  </body>
 </html>
