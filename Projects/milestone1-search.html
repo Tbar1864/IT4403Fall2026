@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Web Search Results | Open Library</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.6;
+        color: #1f2937;
+        background-color: #f3f6f8;
+      }
+
+      header {
+        background-color: #1d4e89;
+        color: #ffffff;
+        padding: 2.5rem 1rem;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2rem;
+      }
+
+      header p {
+        margin: 0.5rem 0 0;
+      }
+
+      nav {
+        background-color: #163b67;
+        text-align: center;
+        padding: 0.75rem;
+      }
+
+      nav a {
+        color: #ffffff;
+        font-weight: bold;
+        margin: 0 0.8rem;
+        text-decoration: none;
+      }
+
+      nav a:hover,
+      nav a:focus {
+        text-decoration: underline;
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .intro {
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background-color: #ffffff;
+        border-left: 5px solid #1d4e89;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .status-message,
+      .error-message {
+        padding: 1rem;
+        border-radius: 6px;
+        font-weight: bold;
+      }
+
+      .status-message {
+        background-color: #e0f2fe;
+        color: #075985;
+      }
+
+      .error-message {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+
+      .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .book-card {
+        display: flex;
+        flex-direction: column;
+        padding: 1.25rem;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+      }
+
+      .cover-container {
+        min-height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        background-color: #f3f4f6;
+        border-radius: 5px;
+      }
+
+      .cover-image {
+        max-width: 100%;
+        max-height: 280px;
+        border-radius: 4px;
+        box-shadow: 0 2px 7px rgba(0, 0, 0, 0.2);
+      }
+
+      .no-cover {
+        padding: 1rem;
+        color: #4b5563;
+        text-align: center;
+      }
+
+      .book-card h2 {
+        margin: 0 0 0.5rem;
+        color: #1d4e89;
+        font-size: 1.3rem;
+      }
+
+      .details {
+        margin: 0;
+      }
+
+      .details dt {
+        margin-top: 0.85rem;
+        color: #1d4e89;
+        font-weight: bold;
+      }
+
+      .details dd {
+        margin: 0.15rem 0 0;
+      }
+
+      .book-link {
+        display: inline-block;
+        margin-top: auto;
+        padding-top: 1.25rem;
+        color: #1d4e89;
+        font-weight: bold;
+      }
+
+      .book-link:hover,
+      .book-link:focus {
+        color: #12365f;
+      }
+
+      footer {
+        margin-top: 2rem;
+        padding: 1rem;
+        color: #ffffff;
+        background-color: #163b67;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Open Library: “Modern Web” Search Results</h1>
+      <p>Individual Project Milestone 1</p>
+    </header>
+
+    <nav aria-label="Primary navigation">
+      <a href="index.html">Project Home</a>
+      <a href="milestone1-book.html">Single Book</a>
+      <a href="milestone1-search.html">Search Results</a>
+    </nav>
+
+    <main>
+      <section aria-labelledby="search-page-heading">
+        <h2 id="search-page-heading">Saved Search Results</h2>
+
+        <div class="intro">
+          <p>
+            This page reads the provided Open Library search JSON file for the
+            predetermined phrase <strong>“modern web.”</strong> The results
+            below are displayed from the JSON file’s <code>docs</code> array.
+          </p>
+        </div>
+
+        <div id="search-content" aria-live="polite">
+          <p class="status-message">Loading search results...</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Individual Project Milestone 1 | Open Library JSON Data Display</p>
+    </footer>
+
+    <script>
+      $(document).ready(function () {
+        function displayValue(value) {
+          return value ? value : "Not available";
+        }
+
+        function displayArray(arrayValue) {
+          if (Array.isArray(arrayValue) && arrayValue.length > 0) {
+            return arrayValue.join(", ");
+          }
+
+          return "Not available";
+        }
+
+        $.getJSON("openlibrary-search.json")
+          .done(function (data) {
+            let output = '<div class="results-grid">';
+
+            $.each(data.docs, function (index, book) {
+              const title = displayValue(book.title);
+              const authors = displayArray(book.author_name);
+              const firstPublished = displayValue(book.first_publish_year);
+              const publishers = displayArray(book.publisher);
+              const editionCount = displayValue(book.edition_count);
+              const languages = displayArray(book.language);
+              const ebookAccess = displayValue(book.ebook_access);
+
+              const workLink = book.key
+                ? "https://openlibrary.org" + book.key
+                : "";
+
+              let coverHtml =
+                '<p class="no-cover">No cover image is available for this record.</p>';
+
+              if (book.cover_i) {
+                coverHtml =
+                  '<img class="cover-image" ' +
+                  'src="https://covers.openlibrary.org/b/id/' +
+                  book.cover_i +
+                  '-M.jpg" ' +
+                  'alt="Book cover for ' +
+                  title +
+                  '">';
+              }
+
+              const linkHtml = workLink
+                ? '<a class="book-link" href="' +
+                  workLink +
+                  '" target="_blank" rel="noopener">View work record on Open Library</a>'
+                : '<p class="book-link">Open Library record not available</p>';
+
+              output +=
+                '<article class="book-card">' +
+                '<div class="cover-container">' +
+                coverHtml +
+                "</div>" +
+                "<h2>" +
+                title +
+                "</h2>" +
+                '<dl class="details">' +
+                "<dt>Author(s)</dt>" +
+                "<dd>" +
+                authors +
+                "</dd>" +
+                "<dt>First published</dt>" +
+                "<dd>" +
+                firstPublished +
+                "</dd>" +
+                "<dt>Publisher(s)</dt>" +
+                "<dd>" +
+                publishers +
+                "</dd>" +
+                "<dt>Edition count</dt>" +
+                "<dd>" +
+                editionCount +
+                "</dd>" +
+                "<dt>Language(s)</dt>" +
+                "<dd>" +
+                languages +
+                "</dd>" +
+                "<dt>eBook access</dt>" +
+                "<dd>" +
+                ebookAccess +
+                "</dd>" +
+                "</dl>" +
+                linkHtml +
+                "</article>";
+            });
+
+            output += "</div>";
+
+            $("#search-content").html(output);
+          })
+          .fail(function () {
+            $("#search-content").html(
+              '<p class="error-message">' +
+                "The search-results JSON file could not be loaded. Verify that openlibrary-search.json is in the same folder as this webpage and test the page through a web server or your live GitHub Pages website." +
+                "</p>",
+            );
+          });
+      });
+    </script>
+  </body>
+</html>

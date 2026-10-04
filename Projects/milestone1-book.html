@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fantastic Mr. Fox | Open Library Book Display</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.6;
+        color: #1f2937;
+        background-color: #f3f6f8;
+      }
+
+      header {
+        background-color: #1d4e89;
+        color: #ffffff;
+        padding: 2.5rem 1rem;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2rem;
+      }
+
+      header p {
+        margin: 0.5rem 0 0;
+      }
+
+      nav {
+        background-color: #163b67;
+        text-align: center;
+        padding: 0.75rem;
+      }
+
+      nav a {
+        color: #ffffff;
+        font-weight: bold;
+        margin: 0 0.8rem;
+        text-decoration: none;
+      }
+
+      nav a:hover,
+      nav a:focus {
+        text-decoration: underline;
+      }
+
+      main {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .status-message,
+      .error-message {
+        padding: 1rem;
+        border-radius: 6px;
+        font-weight: bold;
+      }
+
+      .status-message {
+        background-color: #e0f2fe;
+        color: #075985;
+      }
+
+      .error-message {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+
+      .book-card {
+        display: grid;
+        grid-template-columns: minmax(180px, 260px) 1fr;
+        gap: 2rem;
+        padding: 2rem;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+      }
+
+      .cover-container {
+        text-align: center;
+      }
+
+      .cover-image {
+        width: 100%;
+        max-width: 240px;
+        height: auto;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .no-cover {
+        display: inline-block;
+        padding: 3rem 1rem;
+        color: #4b5563;
+        background-color: #e5e7eb;
+        border-radius: 5px;
+      }
+
+      h2 {
+        margin-top: 0;
+        color: #1d4e89;
+      }
+
+      .details {
+        margin: 1.5rem 0;
+      }
+
+      .details dt {
+        margin-top: 1rem;
+        color: #1d4e89;
+        font-weight: bold;
+      }
+
+      .details dd {
+        margin: 0.15rem 0 0;
+      }
+
+      .first-sentence {
+        padding: 1rem;
+        background-color: #eff6ff;
+        border-left: 5px solid #1d4e89;
+        border-radius: 4px;
+      }
+
+      .button-link {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.7rem 1rem;
+        color: #ffffff;
+        background-color: #1d4e89;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .button-link:hover,
+      .button-link:focus {
+        background-color: #12365f;
+      }
+
+      footer {
+        margin-top: 2rem;
+        padding: 1rem;
+        color: #ffffff;
+        background-color: #163b67;
+        text-align: center;
+      }
+
+      @media (max-width: 700px) {
+        .book-card {
+          grid-template-columns: 1fr;
+        }
+
+        .cover-container {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Open Library: Single-Book Display</h1>
+      <p>Individual Project Milestone 1</p>
+    </header>
+
+    <nav aria-label="Primary navigation">
+      <a href="index.html">Project Home</a>
+      <a href="milestone1-book.html">Single Book</a>
+      <a href="milestone1-search.html">Search Results</a>
+    </nav>
+
+    <main>
+      <section aria-labelledby="book-page-heading">
+        <h2 id="book-page-heading">Book Edition Information</h2>
+        <div id="book-content" aria-live="polite">
+          <p class="status-message">Loading book information...</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Individual Project Milestone 1 | Open Library JSON Data Display</p>
+    </footer>
+
+    <script>
+      $(document).ready(function () {
+        function displayValue(value) {
+          return value ? value : "Not available";
+        }
+
+        function displayArray(arrayValue) {
+          if (Array.isArray(arrayValue) && arrayValue.length > 0) {
+            return arrayValue.join(", ");
+          }
+
+          return "Not available";
+        }
+
+        $.getJSON("openlibrary-book.json")
+          .done(function (book) {
+            const title = displayValue(book.title);
+            const publisher = displayArray(book.publishers);
+            const publicationDate = displayValue(book.publish_date);
+            const pageCount = displayValue(book.number_of_pages);
+            const isbn10 = displayArray(book.isbn_10);
+            const isbn13 = displayArray(book.isbn_13);
+            const contributors = displayArray(book.contributions);
+            const firstSentence =
+              book.first_sentence && book.first_sentence.value
+                ? book.first_sentence.value
+                : "Not available";
+
+            const authorLink =
+              book.authors && book.authors.length > 0 && book.authors[0].key
+                ? "https://openlibrary.org" + book.authors[0].key
+                : "";
+
+            const bookLink = book.key
+              ? "https://openlibrary.org" + book.key
+              : "";
+
+            let coverHtml = '<p class="no-cover">No cover image available.</p>';
+
+            if (Array.isArray(book.covers)) {
+              const validCoverId = book.covers.find(function (coverId) {
+                return Number(coverId) > 0;
+              });
+
+              if (validCoverId) {
+                coverHtml =
+                  '<img class="cover-image" ' +
+                  'src="https://covers.openlibrary.org/b/id/' +
+                  validCoverId +
+                  '-L.jpg" ' +
+                  'alt="Book cover for ' +
+                  title +
+                  '">';
+              }
+            }
+
+            const authorHtml = authorLink
+              ? '<a href="' +
+                authorLink +
+                '" target="_blank" rel="noopener">View author record on Open Library</a>'
+              : "Not available";
+
+            const bookLinkHtml = bookLink
+              ? '<a class="button-link" href="' +
+                bookLink +
+                '" target="_blank" rel="noopener">View this edition on Open Library</a>'
+              : "";
+
+            const output =
+              '<article class="book-card">' +
+              '<div class="cover-container">' +
+              coverHtml +
+              "</div>" +
+              "<div>" +
+              "<h2>" +
+              title +
+              "</h2>" +
+              '<dl class="details">' +
+              "<dt>Publisher</dt>" +
+              "<dd>" +
+              publisher +
+              "</dd>" +
+              "<dt>Publication date</dt>" +
+              "<dd>" +
+              publicationDate +
+              "</dd>" +
+              "<dt>Number of pages</dt>" +
+              "<dd>" +
+              pageCount +
+              "</dd>" +
+              "<dt>ISBN-10</dt>" +
+              "<dd>" +
+              isbn10 +
+              "</dd>" +
+              "<dt>ISBN-13</dt>" +
+              "<dd>" +
+              isbn13 +
+              "</dd>" +
+              "<dt>Contributors</dt>" +
+              "<dd>" +
+              contributors +
+              "</dd>" +
+              "<dt>Author reference</dt>" +
+              "<dd>" +
+              authorHtml +
+              "</dd>" +
+              "</dl>" +
+              "<h3>First sentence</h3>" +
+              '<p class="first-sentence">“' +
+              firstSentence +
+              "”</p>" +
+              bookLinkHtml +
+              "</div>" +
+              "</article>";
+
+            $("#book-content").html(output);
+          })
+          .fail(function () {
+            $("#book-content").html(
+              '<p class="error-message">' +
+                "The book JSON file could not be loaded. Verify that openlibrary-book.json is in the same folder as this webpage and test the page through a web server or your live GitHub Pages website." +
+                "</p>",
+            );
+          });
+      });
+    </script>
+  </body>
+</html>
