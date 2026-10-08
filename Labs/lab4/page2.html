@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Album and Photos | Lab 4</title><style>
+      :root {
+        --black: #000;
+        --gold: #f5b335;
+        --bg: #f4f5f7;
+        --text: #202124;
+        --muted: #5f6368;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+      header {
+        padding: 22px 6%;
+        color: #fff;
+        background: var(--black);
+        border-bottom: 6px solid var(--gold);
+      }
+      .brand,
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .brand p {
+        margin: 0 0 5px;
+        color: var(--gold);
+        font-weight: bold;
+      }
+      .brand h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+      }
+      nav {
+        background: #222;
+      }
+      nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0;
+        list-style: none;
+      }
+      nav a {
+        display: block;
+        padding: 14px 24px;
+        color: #fff;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      nav a:hover,
+      nav a:focus,
+      nav a[aria-current="page"] {
+        color: #000;
+        background: var(--gold);
+        outline: none;
+      }
+      main {
+        padding: 42px 6%;
+      }
+      h2 {
+        margin-top: 0;
+        font-size: 2rem;
+      }
+      .lead {
+        color: var(--muted);
+      }
+      .notice {
+        padding: 22px;
+        background: #fff;
+        border-left: 5px solid var(--gold);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+      .lab-materials ul {
+        margin: 0;
+        padding-left: 22px;
+      }
+      .lab-materials li {
+        margin: 12px 0;
+      }
+      .lab-materials a:not(.button) {
+        color: #1a4f9c;
+        font-weight: bold;
+      }
+      .lab-materials a:not(.button):hover,
+      .lab-materials a:not(.button):focus {
+        color: #000;
+        background: var(--gold);
+        outline: 2px solid #000;
+        outline-offset: 2px;
+      }
+      .button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 16px;
+        color: #fff;
+        background: var(--black);
+        border-radius: 3px;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      .button:hover,
+      .button:focus {
+        color: #000;
+        background: var(--gold);
+        outline: 2px solid #000;
+        outline-offset: 2px;
+      }
+      footer {
+        padding: 20px 6%;
+        color: #fff;
+        background: var(--black);
+        text-align: center;
+      }
+      footer p {
+        margin: 0;
+      }
+      @media (max-width: 520px) {
+        nav ul {
+          display: block;
+        }
+        nav a {
+          text-align: center;
+        }
+      }
+    
+      .panel {background: white; padding: 24px; margin-bottom: 24px; border-left: 5px solid var(--gold); box-shadow: 0 3px 10px #00000019;}
+      a {color: #1a4f9c;}
+      dt {font-weight: bold;} dd {margin: 0 0 12px; overflow-wrap: anywhere;}
+      .photos {display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 20px;}
+      .photo {margin: 0; padding: 16px; background: white; border: 1px solid #ddd;}
+      .photo img {width: 150px; height: 150px; max-width: 100%; object-fit: cover; display: block; margin: 0 auto 12px;}
+      .photo figcaption {overflow-wrap: anywhere;}
+      .error {color: #a31818;}
+</style></head>
+<body><header><div class="brand"><p>Kennesaw State University</p>
+<h1>CCSE Information Technology (IT) Website</h1></div></header>
+<nav aria-label="Main navigation"><ul>
+<li><a href="../../index.html">Home</a></li><li><a href="../../exercises.html">Exercises</a></li>
+<li><a href="../../lab-work.html">Lab Work</a></li><li><a href="../../projects.html">Projects</a></li>
+</ul></nav><main><h2>Lab 4: Album and Photos</h2>
+<p class="lead">View the album selected on the user and albums page.</p>
+<p id="status" role="status">Loading album and photos...</p>
+<section class="panel" aria-labelledby="album-heading"><h3 id="album-heading">Album Information</h3><dl id="album-details"></dl></section>
+<section aria-labelledby="photos-heading"><h3 id="photos-heading">Photos</h3><div id="photo-list" class="photos"></div></section>
+<a class="button" href="page1.html">Return to User and Albums</a></main>    <footer id="about" class="scroll-mt-24 bg-[#10233f]">
+      <div class="mx-auto max-w-7xl px-5 py-10 sm:px-8">
+        <p class="max-w-2xl text-sm leading-6 text-[#dce5ef]">
+          Disclaimer: This is a student website created for course projects in
+          IT 4403 Advanced Web and Mobile Applications at Kennesaw State
+          University. The content is for educational purposes only.
+        </p>
+      </div>
+    </footer>
+
+<script>const API = "https://jsonplaceholder.typicode.com";
+async function getJSON(path) {
+  const response = await fetch(API + path);
+  if (!response.ok) throw new Error(`API request failed (${response.status}).`);
+  return response.json();
+}
+function addDetail(list, label, value) {
+  const term = document.createElement("dt");
+  const detail = document.createElement("dd");
+  term.textContent = label;
+  detail.textContent = value;
+  list.append(term, detail);
+}
+function showError(error) {
+  const status = document.getElementById("status");
+  status.classList.add("error");
+  status.textContent = "Unable to load data: " + error.message;
+}
+
+async function loadAlbumAndPhotos() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const albumId = params.get("albumId");
+    if (!albumId || !/^[1-9]\d*$/.test(albumId)) {
+      throw new Error("Select an album from Page 1 to supply a valid album ID.");
+    }
+    const [album, photos] = await Promise.all([
+      getJSON(`/albums/${encodeURIComponent(albumId)}`),
+      getJSON(`/photos?albumId=${encodeURIComponent(albumId)}`)
+    ]);
+    const details = document.getElementById("album-details");
+    addDetail(details, "Album title", album.title);
+    addDetail(details, "Album ID", album.id);
+    addDetail(details, "User ID", album.userId);
+    const list = document.getElementById("photo-list");
+    for (const photo of photos) {
+      const figure = document.createElement("figure");
+      figure.className = "photo";
+      const image = document.createElement("img");
+      image.alt = photo.title;
+      image.width = 150;
+      image.height = 150;
+      image.loading = "lazy";
+      const caption = document.createElement("figcaption");
+      caption.textContent = photo.title;
+      image.addEventListener("error", () => {
+        image.hidden = true;
+        const notice = document.createElement("p");
+        notice.textContent = "Thumbnail unavailable from the image host.";
+        figure.prepend(notice);
+      }, {once: true});
+      image.src = photo.thumbnailUrl;
+      figure.append(image, caption);
+      list.append(figure);
+    }
+    document.getElementById("status").textContent = `Loaded ${photos.length} photos for album ${album.id}.`;
+  } catch (error) { showError(error); }
+}
+loadAlbumAndPhotos();</script></body></html>
