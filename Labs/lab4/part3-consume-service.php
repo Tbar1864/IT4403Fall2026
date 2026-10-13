@@ -29,6 +29,20 @@ function requestJson(string $url): array {
     if (!is_array($data)) {
         throw new RuntimeException('The API did not return the expected JSON structure.');
     }
+    // Google Maps reports service errors inside its JSON response.
+    // Only check Google's status; other APIs use different response formats.
+    $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+    if ($host === 'maps.googleapis.com') {
+        $apiStatus = $data['status'] ?? 'UNKNOWN';
+        if ($apiStatus !== 'OK') {
+            throw new RuntimeException(
+                'Google Maps did not return location data. API status: ' .
+                $apiStatus .
+                '. This lab does not require configuring Google Maps; ' .
+                'use the public API demonstration instead.'
+            );
+        }
+    }
     return $data;
 }
 $user = null;
