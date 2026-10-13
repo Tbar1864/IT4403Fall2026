@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 5: Open Library APIs | CCSE Information Technology</title>
+    <style>
+      :root {
+        --black: #000;
+        --gold: #f5b335;
+        --bg: #f4f5f7;
+        --text: #202124;
+        --muted: #5f6368;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+      header {
+        padding: 22px 6%;
+        color: #fff;
+        background: var(--black);
+        border-bottom: 6px solid var(--gold);
+      }
+      .brand,
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .brand p {
+        margin: 0 0 5px;
+        color: var(--gold);
+        font-weight: bold;
+      }
+      .brand h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+      }
+      nav {
+        background: #222;
+      }
+      nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0;
+        list-style: none;
+      }
+      nav a {
+        display: block;
+        padding: 14px 24px;
+        color: #fff;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      nav a:hover,
+      nav a:focus,
+      nav a[aria-current="page"] {
+        color: #000;
+        background: var(--gold);
+        outline: none;
+      }
+      main {
+        padding: 42px 6%;
+      }
+      h2 {
+        margin-top: 0;
+        font-size: 2rem;
+      }
+      .lead {
+        color: var(--muted);
+      }
+      .notice {
+        padding: 22px;
+        background: #fff;
+        border-left: 5px solid var(--gold);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+      .lab-materials ul {
+        margin: 0;
+        padding-left: 22px;
+      }
+      .lab-materials li {
+        margin: 12px 0;
+      }
+      .lab-materials a:not(.button) {
+        color: #1a4f9c;
+        font-weight: bold;
+      }
+      .lab-materials a:not(.button):hover,
+      .lab-materials a:not(.button):focus {
+        color: #000;
+        background: var(--gold);
+        outline: 2px solid #000;
+        outline-offset: 2px;
+      }
+      .button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 16px;
+        color: #fff;
+        background: var(--black);
+        border-radius: 3px;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      .button:hover,
+      .button:focus {
+        color: #000;
+        background: var(--gold);
+        outline: 2px solid #000;
+        outline-offset: 2px;
+      }
+      footer {
+        padding: 20px 6%;
+        color: #fff;
+        background: var(--black);
+        text-align: center;
+      }
+      footer p {
+        margin: 0;
+      }
+      @media (max-width: 520px) {
+        nav ul {
+          display: block;
+        }
+        nav a {
+          text-align: center;
+        }
+      }
+      .table-wrap { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+      caption { text-align: left; font-weight: bold; padding-bottom: 10px; }
+      th, td { padding: 12px; text-align: left; border-bottom: 1px solid #d5d8de; vertical-align: top; }
+      thead { background: #f5b335; color: #000; }
+      tbody tr:nth-child(even) { background: #f4f5f7; }
+      .error-message { color: #8b2020; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <p>Kennesaw State University</p>
+        <h1>CCSE Information Technology (IT) Website</h1>
+      </div>
+    </header>
+
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../exercises.html">Exercises</a></li>
+        <li><a href="../../lab-work.html" aria-current="page">Lab Work</a></li>
+        <li><a href="../../projects.html">Projects</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <h2>Lab 5: Open Library APIs</h2>
+      <p class="lead">Retrieve live JSON data and display book titles and first publication years using JavaScript.</p>
+      <section class="notice lab-materials" aria-labelledby="books-heading">
+        <h3 id="books-heading">Open Library: Data Analysis Books</h3>
+        <p>This page requests up to 10 results for the fixed search term <q>data analysis</q>.
+          Book information is loaded from the API, not hardcoded.</p>
+        <p id="status" role="status" aria-live="polite">Loading books…</p>
+        <div id="results" aria-busy="true"></div>
+        <noscript><p>Enable JavaScript to load live book information.</p></noscript>
+        <p>Data source: <a href="https://openlibrary.org/">Open Library</a>.
+          <a href="https://openlibrary.org/dev/docs/api/search">Search API documentation</a>.</p>
+        <a class="button" href="../../lab-work.html">Return to Lab Work</a>
+      </section>
+    </main>
+
+    <footer id="about" class="scroll-mt-24 bg-[#10233f]">
+      <div class="mx-auto max-w-7xl px-5 py-10 sm:px-8">
+        <p class="max-w-2xl text-sm leading-6 text-[#dce5ef]">
+          Disclaimer: This is a student website created for course projects in
+          IT 4403 Advanced Web and Mobile Applications at Kennesaw State
+          University. The content is for educational purposes only.
+        </p>
+      </div>
+    </footer>
+    <script>
+      "use strict";
+
+      // Part 3: Change q to web%20development and limit to 5 for testing.
+      // Restore this exact endpoint before publishing.
+      const API_URL = "https://openlibrary.org/search.json?q=data%20analysis&limit=10";
+      const results = document.getElementById("results");
+      const status = document.getElementById("status");
+
+      async function loadBooks() {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+
+        try {
+          const response = await fetch(API_URL, { signal: controller.signal });
+          if (!response.ok) {
+            throw new Error(`The API returned HTTP ${response.status}.`);
+          }
+
+          const data = await response.json();
+          if (!Array.isArray(data.docs)) {
+            throw new Error("The API response did not contain a book results array.");
+          }
+
+          results.replaceChildren();
+          if (data.docs.length === 0) {
+            status.textContent = "No books were returned for this request.";
+            return;
+          }
+
+          const table = document.createElement("table");
+          const caption = document.createElement("caption");
+          caption.textContent = "Book search results";
+          table.appendChild(caption);
+
+          const head = document.createElement("thead");
+          const headingRow = document.createElement("tr");
+          for (const label of ["Book title", "First publication year"]) {
+            const th = document.createElement("th");
+            th.scope = "col";
+            th.textContent = label;
+            headingRow.appendChild(th);
+          }
+          head.appendChild(headingRow);
+          table.appendChild(head);
+
+          const tbody = document.createElement("tbody");
+          // Loop through the live docs array and safely display returned values.
+          for (const book of data.docs) {
+            const row = document.createElement("tr");
+            const title = document.createElement("td");
+            title.textContent = book.title || "Title unavailable";
+            const year = document.createElement("td");
+            year.textContent = book.first_publish_year ?? "Year unavailable";
+            row.append(title, year);
+            tbody.appendChild(row);
+          }
+          table.appendChild(tbody);
+          const wrapper = document.createElement("div");
+          wrapper.className = "table-wrap";
+          wrapper.appendChild(table);
+          results.appendChild(wrapper);
+          status.textContent = `Loaded ${data.docs.length} book${data.docs.length === 1 ? "" : "s"}.`;
+        } catch (error) {
+          console.error("Open Library request failed:", error);
+          results.replaceChildren();
+          status.classList.add("error-message");
+          status.textContent = error.name === "AbortError"
+            ? "Open Library took too long to respond. Refresh the page to try again."
+            : "Book information could not be loaded. Check your connection and refresh the page. The API may be temporarily unavailable.";
+        } finally {
+          clearTimeout(timeout);
+          results.setAttribute("aria-busy", "false");
+        }
+      }
+
+      loadBooks();
+    </script>
+  </body>
+</html>
