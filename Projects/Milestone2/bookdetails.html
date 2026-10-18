@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Search Home</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.6;
+        color: #1f2937;
+        background-color: #f3f6f8;
+      }
+
+      header {
+        background-color: #1d4e89;
+        color: #ffffff;
+        padding: 2.5rem 1rem;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2rem;
+      }
+
+      header p {
+        margin: 0.5rem 0 0;
+      }
+
+      nav {
+        background-color: #163b67;
+        text-align: center;
+        padding: 0.75rem;
+      }
+
+      nav a {
+        color: #ffffff;
+        font-weight: bold;
+        margin: 0 0.8rem;
+        text-decoration: none;
+      }
+
+      nav a:hover,
+      nav a:focus {
+        text-decoration: underline;
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .intro {
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background-color: #ffffff;
+        border-left: 5px solid #1d4e89;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .status-message,
+      .error-message {
+        padding: 1rem;
+        border-radius: 6px;
+        font-weight: bold;
+      }
+
+      .status-message {
+        background-color: #e0f2fe;
+        color: #075985;
+      }
+
+      .error-message {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+
+      .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .book-card {
+        display: flex;
+        flex-direction: column;
+        padding: 1.25rem;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+      }
+
+      .cover-container {
+        min-height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        background-color: #f3f4f6;
+        border-radius: 5px;
+      }
+
+      .cover-image {
+        max-width: 100%;
+        max-height: 280px;
+        border-radius: 4px;
+        box-shadow: 0 2px 7px rgba(0, 0, 0, 0.2);
+      }
+
+      .no-cover {
+        padding: 1rem;
+        color: #4b5563;
+        text-align: center;
+      }
+
+      .book-card h2 {
+        margin: 0 0 0.5rem;
+        color: #1d4e89;
+        font-size: 1.3rem;
+      }
+
+      .details {
+        margin: 0;
+      }
+
+      .details dt {
+        margin-top: 0.85rem;
+        color: #1d4e89;
+        font-weight: bold;
+      }
+
+      .details dd {
+        margin: 0.15rem 0 0;
+      }
+
+      .book-link {
+        display: inline-block;
+        margin-top: auto;
+        padding-top: 1.25rem;
+        color: #1d4e89;
+        font-weight: bold;
+      }
+
+      .book-link:hover,
+      .book-link:focus {
+        color: #12365f;
+      }
+
+      footer {
+        margin-top: 2rem;
+        padding: 1rem;
+        color: #ffffff;
+        background-color: #163b67;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Book Search Homepage</h1>
+      <p>Individual Project Milestone 2</p>
+    </header>
+
+    <nav aria-label="Primary navigation">
+      <a href="../../projects.html">Return to Projects</a>
+      <a href="milestone1-book.html">Single Book</a>
+      <a href="milestone1-search.html">Search Results</a>
+    </nav>
+
+    <main>
+      <section aria-labelledby="search-page-heading">
+        <h2 id="search-page-heading">Get Books</h2>
+
+        <div class="intro">
+          <p>
+            This page is used to retrieve a list of books from the Open Library
+            API based on the user's search query. Use the
+            <strong>Get Books</strong>
+            button to fetch the results and display them below.
+          </p>
+        </div>
+
+        <input type="text" id="search" placeholder="Search for books..." />
+        <button onclick="getBooks()">Get Books</button><br />
+        <div id="books-list"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Individual Project Milestone 2 |Book Search Homepage</p>
+    </footer>
+
+    <script>
+      <script>
+        function getBooks() {
+          const searchQuery = document.getElementById("search").value.trim();
+          const booksList = document.getElementById("books-list");
+
+          // Clear previous results
+          booksList.innerHTML = "";
+
+          if (searchQuery === "") {
+            const errorMessage = document.createElement("p");
+            errorMessage.className = "error-message";
+            errorMessage.textContent = "Please enter a search query.";
+            booksList.appendChild(errorMessage);
+            return;
+          }
+
+          const apiUrl = `https://openlibrary.org/search.json?q=${encodeURIComponent(
+            searchQuery
+          )}`;
+
+          fetch(apiUrl)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              if (data.docs.length === 0) {
+                const noResultsMessage = document.createElement("p");
+                noResultsMessage.className = "status-message";
+                noResultsMessage.textContent =
+                  "No results found for your search query.";
+                booksList.appendChild(noResultsMessage);
+                return;
+              }
+
+              const resultsGrid = document.createElement("div");
+              resultsGrid.className = "results-grid";
+
+              data.docs.forEach((book) => {
+                const bookCard = document.createElement("div");
+                bookCard.className = "book-card";
+
+                // Cover Image
+                const coverContainer = document.createElement("div");
+                coverContainer.className = "cover-container";
+
+                if (book.cover_i) {
+                  const coverImage = document.createElement("img");
+                  coverImage.src = `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`;
+                  coverImage.alt = `${book.title} cover`;
+                  coverImage.className = "cover-image";
+                  coverContainer.appendChild(coverImage);
+                } else {
+                  const noCoverText = document.createElement("p");
+                  noCoverText.className = "no-cover";
+                  noCoverText.textContent = "No Cover Image Available";
+                  coverContainer.appendChild(noCoverText);
+                }
+
+                bookCard.appendChild(coverContainer);
+
+                // Book Title
+                const titleHeading = document.createElement("h2");
+                titleHeading.textContent = book.title;
+                bookCard.appendChild(titleHeading);
+
+                // Book Details
+                const detailsList = document.createElement("dl
+    </script>
+  </body>
+</html>
