@@ -175,8 +175,8 @@
 
     <nav aria-label="Primary navigation">
       <a href="../../projects.html">Return to Projects</a>
-      <a href="milestone1-book.html">Single Book</a>
-      <a href="milestone1-search.html">Search Results</a>
+      <a href="milestone2-booksearchhome.html">Home</a>
+      <a href="Bookshelfpage.html">My Bookshelf</a>
     </nav>
 
     <main>
@@ -203,76 +203,33 @@
     </footer>
 
     <script>
-      <script>
-        function getBooks() {
-          const searchQuery = document.getElementById("search").value.trim();
-          const booksList = document.getElementById("books-list");
+          <script>
+            const parameters = new URLSearchParams(window.location.search);
+      const workId = parameters.get("workId");
 
-          // Clear previous results
-          booksList.innerHTML = "";
+      if (!workId) {
+        console.error("No Work ID was provided.");
+      } else {
+        const apiUrl =
+          "https://openlibrary.org/works/" +
+          encodeURIComponent(workId) +
+          ".json";
 
-          if (searchQuery === "") {
-            const errorMessage = document.createElement("p");
-            errorMessage.className = "error-message";
-            errorMessage.textContent = "Please enter a search query.";
-            booksList.appendChild(errorMessage);
-            return;
-          }
+        fetch(apiUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed: " + response.status);
+            }
 
-          const apiUrl = `https://openlibrary.org/search.json?q=${encodeURIComponent(
-            searchQuery
-          )}`;
-
-          fetch(apiUrl)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Network response was not ok");
-              }
-              return response.json();
-            })
-            .then((data) => {
-              if (data.docs.length === 0) {
-                const noResultsMessage = document.createElement("p");
-                noResultsMessage.className = "status-message";
-                noResultsMessage.textContent =
-                  "No results found for your search query.";
-                booksList.appendChild(noResultsMessage);
-                return;
-              }
-
-              const resultsGrid = document.createElement("div");
-              resultsGrid.className = "results-grid";
-
-              data.docs.forEach((book) => {
-                const bookCard = document.createElement("div");
-                bookCard.className = "book-card";
-
-                // Cover Image
-                const coverContainer = document.createElement("div");
-                coverContainer.className = "cover-container";
-
-                if (book.cover_i) {
-                  const coverImage = document.createElement("img");
-                  coverImage.src = `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`;
-                  coverImage.alt = `${book.title} cover`;
-                  coverImage.className = "cover-image";
-                  coverContainer.appendChild(coverImage);
-                } else {
-                  const noCoverText = document.createElement("p");
-                  noCoverText.className = "no-cover";
-                  noCoverText.textContent = "No Cover Image Available";
-                  coverContainer.appendChild(noCoverText);
-                }
-
-                bookCard.appendChild(coverContainer);
-
-                // Book Title
-                const titleHeading = document.createElement("h2");
-                titleHeading.textContent = book.title;
-                bookCard.appendChild(titleHeading);
-
-                // Book Details
-                const detailsList = document.createElement("dl
+            return response.json();
+          })
+          .then((book) => {
+            console.log(book);
+          })
+          .catch((error) => {
+            console.error("Error loading book details:", error);
+          });
+      }
     </script>
   </body>
 </html>
