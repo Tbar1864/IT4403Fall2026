@@ -174,26 +174,27 @@
     </header>
 
     <nav aria-label="Primary navigation">
-      <a href="../projects.html">Return to Projects</a>
+      <a href="../../projects.html">Return to Projects</a>
       <a href="milestone1-book.html">Single Book</a>
       <a href="milestone1-search.html">Search Results</a>
     </nav>
 
     <main>
       <section aria-labelledby="search-page-heading">
-        <h2 id="search-page-heading">Saved Search Results</h2>
+        <h2 id="search-page-heading">Get Books</h2>
 
         <div class="intro">
           <p>
-            This page reads the provided Open Library search JSON file for the
-            predetermined phrase <strong>“modern web.”</strong> The results
-            below are displayed from the JSON file’s <code>docs</code> array.
+            This page is used to retrieve a list of books from the Open Library
+            API based on the user's search query. Use the
+            <strong>Get Books</strong>
+            button to fetch the results and display them below.
           </p>
         </div>
 
-        <div id="search-content" aria-live="polite">
-          <p class="status-message">Loading search results...</p>
-        </div>
+        <input type="text" id="search" placeholder="Search for books..." />
+        <button onclick="getBooks()">Get Books</button><br />
+        <div id="books-list"></div>
       </section>
     </main>
 
@@ -202,106 +203,21 @@
     </footer>
 
     <script>
-      $(document).ready(function () {
-        function displayValue(value) {
-          return value ? value : "Not available";
-        }
-
-        function displayArray(arrayValue) {
-          if (Array.isArray(arrayValue) && arrayValue.length > 0) {
-            return arrayValue.join(", ");
-          }
-
-          return "Not available";
-        }
-
-        $.getJSON("openlibrary-search.json")
-          .done(function (data) {
-            let output = '<div class="results-grid">';
-
-            $.each(data.docs, function (index, book) {
-              const title = displayValue(book.title);
-              const authors = displayArray(book.author_name);
-              const firstPublished = displayValue(book.first_publish_year);
-              const publishers = displayArray(book.publisher);
-              const editionCount = displayValue(book.edition_count);
-              const languages = displayArray(book.language);
-              const ebookAccess = displayValue(book.ebook_access);
-
-              const workLink = book.key
-                ? "https://openlibrary.org" + book.key
-                : "";
-
-              let coverHtml =
-                '<p class="no-cover">No cover image is available for this record.</p>';
-
-              if (book.cover_i) {
-                coverHtml =
-                  '<img class="cover-image" ' +
-                  'src="https://covers.openlibrary.org/b/id/' +
-                  book.cover_i +
-                  '-M.jpg" ' +
-                  'alt="Book cover for ' +
-                  title +
-                  '">';
-              }
-
-              const linkHtml = workLink
-                ? '<a class="book-link" href="' +
-                  workLink +
-                  '" target="_blank" rel="noopener">View work record on Open Library</a>'
-                : '<p class="book-link">Open Library record not available</p>';
-
-              output +=
-                '<article class="book-card">' +
-                '<div class="cover-container">' +
-                coverHtml +
-                "</div>" +
-                "<h2>" +
-                title +
-                "</h2>" +
-                '<dl class="details">' +
-                "<dt>Author(s)</dt>" +
-                "<dd>" +
-                authors +
-                "</dd>" +
-                "<dt>First published</dt>" +
-                "<dd>" +
-                firstPublished +
-                "</dd>" +
-                "<dt>Publisher(s)</dt>" +
-                "<dd>" +
-                publishers +
-                "</dd>" +
-                "<dt>Edition count</dt>" +
-                "<dd>" +
-                editionCount +
-                "</dd>" +
-                "<dt>Language(s)</dt>" +
-                "<dd>" +
-                languages +
-                "</dd>" +
-                "<dt>eBook access</dt>" +
-                "<dd>" +
-                ebookAccess +
-                "</dd>" +
-                "</dl>" +
-                linkHtml +
-                "</article>";
+      <script>
+      function getBooks() {
+        fetch("https://api.example.com/books")
+          .then((response) => response.json())
+          .then((data) => {
+            const booksList = document.getElementById("books-list");
+            booksList.innerHTML = "";
+            data.forEach((book) => {
+              const listItem = document.createElement("li");
+              listItem.textContent = `${book.title} by ${book.author}`;
+              booksList.appendChild(listItem);
             });
-
-            output += "</div>";
-
-            $("#search-content").html(output);
           })
-          .fail(function () {
-            $("#search-content").html(
-              '<p class="error-message">' +
-                "The search-results JSON file could not be loaded. Verify that openlibrary-search.json is in the same folder as this webpage and test the page through a web server or your live GitHub Pages website." +
-                "</p>",
-            );
-          });
-      });
+          .catch((error) => console.error("Error fetching books:", error));
+      }
     </script>
   </body>
 </html>
