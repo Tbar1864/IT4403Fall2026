@@ -199,27 +199,14 @@
       const workId = parameters.get("workId");
 
       if (!workId) {
-        console.error("No Work ID was provided.");
+        // Display a message explaining that no book was selected.
       } else {
         const apiUrl =
           "https://openlibrary.org/works/" +
           encodeURIComponent(workId) +
           ".json";
 
-        fetch(apiUrl)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Request failed: " + response.status);
-            }
-
-            return response.json();
-          })
-          .then((book) => {
-            console.log(book);
-          })
-          .catch((error) => {
-            console.error("Error loading book details:", error);
-          });
+        // Fetch this URL and display this book's details.
       }
     </script>
   </body>
