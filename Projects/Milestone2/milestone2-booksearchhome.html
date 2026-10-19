@@ -213,29 +213,126 @@
     </footer>
 
     <script>
+      const resultsPerPage = 10;
+      const maximumResults = 60;
+
+      let currentSearch = "";
+
+      const booksList = document.getElementById("books-list");
+      const searchMessage = document.getElementById("search-message");
+      const pagination = document.getElementById("pagination");
+      const pageSelect = document.getElementById("page-select");
+
       function getBooks() {
-        document.getElementById("books-list").innerHTML = "";
-        fetch(
+        currentSearch = document.getElementById("search").value.trim();
+
+        booksList.replaceChildren();
+        pagination.hidden = true;
+
+        if (!currentSearch) {
+          searchMessage.textContent = "Please enter a book title or keyword.";
+          return;
+        }
+
+        // Every new search begins on page 1.
+        loadPage(1);
+      }
+
+      pageSelect.addEventListener("change", function () {
+        loadPage(Number(pageSelect.value));
+      });
+
+      async function loadPage(page) {
+        booksList.replaceChildren();
+        searchMessage.textContent = "Loading books...";
+        pageSelect.disabled = true;
+
+        const apiUrl =
           "https://openlibrary.org/search.json?q=" +
-            document.getElementById("search").value,
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            const booksList = document.getElementById("books-list");
-            booksList.innerHTML = "";
-            data.docs.forEach((book) => {
-              const listItem = document.createElement("li");
+          encodeURIComponent(currentSearch) +
+          "&limit=" +
+          resultsPerPage +
+          "&page=" +
+          page;
 
-              const workId = book.key.split("/").pop();
+        try {
+          const response = await fetch(apiUrl);
 
-              const bookLink = document.createElement("a");
-              bookLink.href = `bookdetails.html?workId=${encodeURIComponent(workId)}`;
-              bookLink.textContent = book.title;
-              listItem.appendChild(bookLink);
-              booksList.appendChild(listItem);
-            });
-          })
-          .catch((error) => console.error("Error fetching books:", error));
+          if (!response.ok) {
+            throw new Error("Request failed: " + response.status);
+          }
+
+          const data = await response.json();
+
+          const totalResults = Math.min(data.numFound, maximumResults);
+          const totalPages = Math.ceil(totalResults / resultsPerPage);
+
+          if (totalResults === 0) {
+            searchMessage.textContent = "No books found. Try another search.";
+            pagination.hidden = true;
+            return;
+          }
+
+          // Rebuild the dropdown using the available page count.
+          pageSelect.replaceChildren();
+
+          for (let number = 1; number <= totalPages; number++) {
+            const option = document.createElement("option");
+            option.value = number;
+            option.textContent = "Page " + number;
+            pageSelect.appendChild(option);
+          }
+
+          pageSelect.value = String(page);
+          pagination.hidden = false;
+
+          const list = document.createElement("ul");
+
+          data.docs.forEach((book) => {
+            const listItem = document.createElement("li");
+
+            if (book.cover_i) {
+              const cover = document.createElement("img");
+
+              cover.src = `https://covers.openlibrary.org/b/id/${book.cover_i}-S.jpg?default=false`;
+              cover.alt = "Cover of " + book.title;
+
+              cover.addEventListener("error", function () {
+                cover.replaceWith(
+                  document.createTextNode("No cover available"),
+                );
+              });
+
+              listItem.appendChild(cover);
+            } else {
+              const fallback = document.createElement("span");
+              fallback.textContent = "No cover available";
+              listItem.appendChild(fallback);
+            }
+
+            listItem.appendChild(document.createTextNode(" "));
+
+            const workId = book.key.split("/").pop();
+
+            const bookLink = document.createElement("a");
+            bookLink.href =
+              "bookdetails.html?workId=" + encodeURIComponent(workId);
+            bookLink.textContent = book.title;
+
+            listItem.appendChild(bookLink);
+            list.appendChild(listItem);
+          });
+
+          booksList.appendChild(list);
+
+          searchMessage.textContent = `Page ${page} of ${totalPages}. Showing up to ${totalResults} results.`;
+        } catch (error) {
+          console.error("Error fetching books:", error);
+          searchMessage.textContent = "Unable to load books. Please try again.";
+          pagination.hidden = true;
+        } finally {
+          pageSelect.disabled = false;
+        }
       }
     </script>
   </body>
