@@ -200,6 +200,112 @@
       <p>Individual Project Milestone 2 |Book Search Homepage</p>
     </footer>
 
-    <script></script>
+    <script>
+      // my selected work IDs for the bookshelf
+      const selectedWorkIds = [
+        "OL23166W",
+        "OL2003035W",
+        "OL111900W",
+        "OL468431W",
+        "OL2918756W",
+      ];
+
+      const bookshelfList = document.getElementById("bookshelf-list");
+      const bookshelfMessage = document.getElementById("bookshelf-message");
+
+      async function loadBookshelf() {
+        bookshelfList.replaceChildren();
+        bookshelfMessage.textContent = "Loading your bookshelf...";
+
+        let loadedBooks = 0;
+
+        for (const workId of selectedWorkIds) {
+          try {
+            const apiUrl =
+              "https://openlibrary.org/works/" +
+              encodeURIComponent(workId) +
+              ".json";
+
+            const response = await fetch(apiUrl);
+
+            if (!response.ok) {
+              throw new Error("Request failed: " + response.status);
+            }
+
+            const book = await response.json();
+
+            const bookCard = document.createElement("article");
+            bookCard.className = "book-card";
+
+            const coverContainer = document.createElement("div");
+            coverContainer.className = "cover-container";
+
+            const coverId = book.covers?.find((id) => id > 0);
+
+            if (coverId) {
+              const cover = document.createElement("img");
+
+              cover.src =
+                "https://covers.openlibrary.org/b/id/" +
+                coverId +
+                "-S.jpg?default=false";
+
+              cover.alt = "Cover of " + (book.title || "selected book");
+              cover.className = "cover-image";
+
+              cover.addEventListener("error", function () {
+                const fallback = document.createElement("p");
+                fallback.className = "no-cover";
+                fallback.textContent = "No cover available.";
+
+                cover.replaceWith(fallback);
+              });
+
+              coverContainer.appendChild(cover);
+            } else {
+              const fallback = document.createElement("p");
+              fallback.className = "no-cover";
+              fallback.textContent = "No cover available.";
+
+              coverContainer.appendChild(fallback);
+            }
+
+            const titleHeading = document.createElement("h3");
+            const titleLink = document.createElement("a");
+
+            titleLink.href =
+              "bookdetails.html?workId=" + encodeURIComponent(workId);
+
+            titleLink.textContent = book.title || "Untitled book";
+
+            titleHeading.appendChild(titleLink);
+
+            bookCard.appendChild(coverContainer);
+            bookCard.appendChild(titleHeading);
+
+            bookshelfList.appendChild(bookCard);
+            loadedBooks++;
+          } catch (error) {
+            console.error("Error loading " + workId + ":", error);
+
+            const errorMessage = document.createElement("p");
+            errorMessage.className = "error-message";
+            errorMessage.textContent =
+              "Unable to load book " + workId + ". Please try again later.";
+
+            bookshelfList.appendChild(errorMessage);
+          }
+        }
+
+        bookshelfMessage.textContent =
+          "Loaded " +
+          loadedBooks +
+          " of " +
+          selectedWorkIds.length +
+          " selected books.";
+      }
+
+      loadBookshelf();
+    </script>
   </body>
 </html>
