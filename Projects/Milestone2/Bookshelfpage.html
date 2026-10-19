@@ -169,32 +169,30 @@
 
   <body>
     <header>
-      <h1>Book Search Homepage</h1>
+      <h1>Book Shelf Page</h1>
       <p>Individual Project Milestone 2</p>
     </header>
 
     <nav aria-label="Primary navigation">
       <a href="../../projects.html">Return to Projects</a>
       <a href="milestone2-booksearchhome.html">Home</a>
-      <a href="bookdetails.html">My Book Details</a>
+      <a href="Bookshelfpage.html" aria-current="page">My Bookshelf</a>
     </nav>
 
     <main>
-      <section aria-labelledby="search-page-heading">
-        <h2 id="search-page-heading">Get Books</h2>
+      <section aria-labelledby="bookshelf-heading">
+        <h2 id="bookshelf-heading">My Selected Books</h2>
 
         <div class="intro">
           <p>
-            This page is used to retrieve a list of books from the Open Library
-            API based on the user's search query. Use the
-            <strong>Get Books</strong>
-            button to fetch the results and display them below.
+            A personal collection of books selected from Open Library. Select a
+            title to view more information.
           </p>
         </div>
 
-        <input type="text" id="search" placeholder="Search for books..." />
-        <button onclick="getBooks()">Get Books</button><br />
-        <div id="books-list"></div>
+        <p id="bookshelf-message" aria-live="polite"></p>
+
+        <div id="bookshelf-list" class="results-grid"></div>
       </section>
     </main>
 
