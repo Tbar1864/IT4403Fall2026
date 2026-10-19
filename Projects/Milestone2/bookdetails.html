@@ -181,12 +181,12 @@
     </nav>
 
     <main>
-      <section aria-labelledby="search-page-heading">
-        <h2 id="search-page-heading">Get Books</h2>
+      <section aria-labelledby="details-heading">
+        <h2 id="details-heading">Book Details</h2>
 
-        <div class="intro">
-          <p>This page displays detailed information about a selected book.</p>
-        </div>
+        <p id="details-message" aria-live="polite"></p>
+
+        <div id="book-details"></div>
       </section>
     </main>
 
@@ -198,16 +198,110 @@
       const parameters = new URLSearchParams(window.location.search);
       const workId = parameters.get("workId");
 
-      if (!workId) {
-        // Display a message explaining that no book was selected.
-      } else {
-        const apiUrl =
-          "https://openlibrary.org/works/" +
-          encodeURIComponent(workId) +
-          ".json";
+      const detailsMessage = document.getElementById("details-message");
+      const detailsContainer = document.getElementById("book-details");
 
-        // Fetch this URL and display this book's details.
+      async function loadBookDetails() {
+        if (!workId) {
+          detailsMessage.textContent =
+            "No book selected. Return to Home and click a book title.";
+          return;
+        }
+
+        detailsMessage.textContent = "Loading book details...";
+
+        try {
+          const response = await fetch(
+            "https://openlibrary.org/works/" +
+              encodeURIComponent(workId) +
+              ".json",
+          );
+
+          if (!response.ok) {
+            throw new Error("Request failed: " + response.status);
+          }
+
+          const book = await response.json();
+
+          const title = document.createElement("h3");
+          title.textContent = book.title || "Untitled book";
+          detailsContainer.appendChild(title);
+
+          const idParagraph = document.createElement("p");
+          idParagraph.textContent = "Work ID: " + workId;
+          detailsContainer.appendChild(idParagraph);
+
+          const coverId = book.covers?.find((id) => id > 0);
+
+          if (coverId) {
+            const cover = document.createElement("img");
+
+            cover.src = `https://covers.openlibrary.org/b/id/${coverId}-M.jpg?default=false`;
+            cover.alt = "Cover of " + (book.title || "selected book");
+            cover.className = "cover-image";
+
+            cover.addEventListener("error", function () {
+              cover.replaceWith(document.createTextNode("No cover available"));
+            });
+
+            detailsContainer.appendChild(cover);
+          } else {
+            const fallback = document.createElement("p");
+            fallback.textContent = "No cover available.";
+            detailsContainer.appendChild(fallback);
+          }
+
+          const descriptionHeading = document.createElement("h3");
+          descriptionHeading.textContent = "Description";
+          detailsContainer.appendChild(descriptionHeading);
+
+          const description = document.createElement("p");
+          description.textContent =
+            typeof book.description === "string"
+              ? book.description
+              : book.description?.value || "No description available.";
+
+          detailsContainer.appendChild(description);
+
+          const subjectsHeading = document.createElement("h3");
+          subjectsHeading.textContent = "Subjects";
+          detailsContainer.appendChild(subjectsHeading);
+
+          if (book.subjects && book.subjects.length > 0) {
+            const subjectsList = document.createElement("ul");
+
+            book.subjects.slice(0, 10).forEach((subject) => {
+              const item = document.createElement("li");
+              item.textContent = subject;
+              subjectsList.appendChild(item);
+            });
+
+            detailsContainer.appendChild(subjectsList);
+          } else {
+            const fallback = document.createElement("p");
+            fallback.textContent = "No subjects available.";
+            detailsContainer.appendChild(fallback);
+          }
+
+          const linkParagraph = document.createElement("p");
+          const libraryLink = document.createElement("a");
+
+          libraryLink.href =
+            "https://openlibrary.org/works/" + encodeURIComponent(workId);
+          libraryLink.textContent = "View this book on Open Library";
+
+          linkParagraph.appendChild(libraryLink);
+          detailsContainer.appendChild(linkParagraph);
+
+          detailsMessage.textContent = "";
+        } catch (error) {
+          console.error("Error loading book details:", error);
+          detailsMessage.textContent =
+            "Unable to load this book. Please try again.";
+        }
       }
+
+      loadBookDetails();
     </script>
   </body>
 </html>
