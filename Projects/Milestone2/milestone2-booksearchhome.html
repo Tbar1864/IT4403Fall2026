@@ -220,9 +220,8 @@
               const workId = book.key.split("/").pop();
 
               const bookLink = document.createElement("a");
-              bookLink.href = `https://openlibrary.org${book.key}`;
-              bookLink.target = "_blank";
-              bookLink.textContent = `${book.title} by ${book.author}`;
+              bookLink.href = `bookdetails.html?workId=${encodeURIComponent(workId)}`;
+              bookLink.textContent = book.title;
               listItem.appendChild(bookLink);
               booksList.appendChild(listItem);
             });
