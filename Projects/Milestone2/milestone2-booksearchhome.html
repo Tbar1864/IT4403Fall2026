@@ -44,7 +44,7 @@
 
         <p id="search-message" aria-live="polite"></p>
 
-        <div id="books-list"></div>
+        <div id="books-list" class="results-grid"></div>
       </section>
     </main>
 
@@ -126,45 +126,55 @@
           pageSelect.value = String(page);
           pagination.hidden = false;
 
-          const list = document.createElement("ul");
-
           data.docs.forEach((book) => {
-            const listItem = document.createElement("li");
+            const bookCard = document.createElement("article");
+            bookCard.className = "book-card";
+
+            const coverContainer = document.createElement("div");
+            coverContainer.className = "cover-container";
 
             if (book.cover_i) {
               const cover = document.createElement("img");
 
               cover.src = `https://covers.openlibrary.org/b/id/${book.cover_i}-S.jpg?default=false`;
-              cover.alt = "Cover of " + book.title;
+
+              cover.alt = "Cover of " + (book.title || "selected book");
+              cover.className = "cover-image";
 
               cover.addEventListener("error", function () {
-                cover.replaceWith(
-                  document.createTextNode("No cover available"),
-                );
+                const fallback = document.createElement("p");
+                fallback.className = "no-cover";
+                fallback.textContent = "No cover available.";
+
+                cover.replaceWith(fallback);
               });
 
-              listItem.appendChild(cover);
+              coverContainer.appendChild(cover);
             } else {
-              const fallback = document.createElement("span");
-              fallback.textContent = "No cover available";
-              listItem.appendChild(fallback);
-            }
+              const fallback = document.createElement("p");
+              fallback.className = "no-cover";
+              fallback.textContent = "No cover available.";
 
-            listItem.appendChild(document.createTextNode(" "));
+              coverContainer.appendChild(fallback);
+            }
 
             const workId = book.key.split("/").pop();
 
-            const bookLink = document.createElement("a");
-            bookLink.href =
+            const titleHeading = document.createElement("h3");
+            const titleLink = document.createElement("a");
+
+            titleLink.href =
               "bookdetails.html?workId=" + encodeURIComponent(workId);
-            bookLink.textContent = book.title;
 
-            listItem.appendChild(bookLink);
-            list.appendChild(listItem);
+            titleLink.textContent = book.title || "Untitled book";
+
+            titleHeading.appendChild(titleLink);
+
+            bookCard.appendChild(coverContainer);
+            bookCard.appendChild(titleHeading);
+
+            booksList.appendChild(bookCard);
           });
-
-          booksList.appendChild(list);
-
           searchMessage.textContent = `Page ${page} of ${totalPages}. Showing up to ${totalResults} results.`;
         } catch (error) {
           console.error("Error fetching books:", error);
