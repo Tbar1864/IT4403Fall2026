@@ -1,5 +1,5 @@
 const resultsPerPage = 10;
-const maximumResults = 60;
+const maximumResults = 50;
 
 let currentSearch = "";
 
@@ -7,6 +7,7 @@ const booksList = document.getElementById("books-list");
 const searchMessage = document.getElementById("search-message");
 const pagination = document.getElementById("pagination");
 const pageSelect = document.getElementById("page-select");
+const searchButton = document.getElementById("search-button");
 
 function getBooks() {
   currentSearch = document.getElementById("search").value.trim();
@@ -26,10 +27,18 @@ pageSelect.addEventListener("change", function () {
   loadPage(Number(pageSelect.value));
 });
 
+document
+  .getElementById("search-form")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+    getBooks();
+  });
+
 async function loadPage(page) {
   booksList.replaceChildren();
   searchMessage.textContent = "Loading books...";
   pageSelect.disabled = true;
+  searchButton.disabled = true;
 
   const apiUrl =
     "https://openlibrary.org/search.json?q=" +
@@ -40,13 +49,12 @@ async function loadPage(page) {
     page;
 
   try {
-    const response = await fetch(apiUrl);
-
-    if (!response.ok) {
-      throw new Error("Request failed: " + response.status);
-    }
-
-    const data = await response.json();
+    const data = await $.ajax({
+      url: apiUrl,
+      method: "GET",
+      dataType: "json",
+      timeout: 15000,
+    });
 
     const totalResults = Math.min(data.numFound, maximumResults);
     const totalPages = Math.ceil(totalResults / resultsPerPage);
@@ -104,13 +112,17 @@ async function loadPage(page) {
       const workId = book.key.split("/").pop();
 
       const titleHeading = document.createElement("h3");
-      const titleLink = document.createElement("a");
+      const titleButton = document.createElement("button");
 
-      titleLink.href = "bookdetails.html?workId=" + encodeURIComponent(workId);
+      titleButton.type = "button";
+      titleButton.className = "book-title-button";
+      titleButton.textContent = book.title || "Untitled book";
 
-      titleLink.textContent = book.title || "Untitled book";
+      titleButton.addEventListener("click", function () {
+        loadBookDetails(workId, book.author_name || []);
+      });
 
-      titleHeading.appendChild(titleLink);
+      titleHeading.appendChild(titleButton);
 
       bookCard.appendChild(coverContainer);
       bookCard.appendChild(titleHeading);
