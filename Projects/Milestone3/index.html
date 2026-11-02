@@ -3,146 +3,125 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Book Details Page</title>
+    <title>Milestone 3 | Open Library Book Search</title>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <link rel="stylesheet" href="milestone2.css" />
+    <link rel="stylesheet" href="milestone3.css" />
   </head>
 
   <body>
     <header>
-      <h1>Book Details Page</h1>
-      <p>Individual Project Milestone 2</p>
+      <h1>Open Library Book Search</h1>
+      <p>Individual Project Milestone 3</p>
     </header>
 
-    <nav aria-label="Primary navigation">
-      <a href="milestone2-booksearchhome.html">Home</a>
-      <a href="Bookshelfpage.html">My Bookshelf</a>
+    <nav aria-label="Application navigation">
+      <a href="#search-section">Search</a>
+      <a href="#details-section">Book Details</a>
+      <a href="#collection-section">Book Collection</a>
     </nav>
 
     <main>
-      <section aria-labelledby="details-heading">
-        <h2 id="details-heading">Book Details</h2>
+      <!-- 1. Search input -->
+      <section
+        id="search-section"
+        class="intro"
+        aria-labelledby="search-heading"
+      >
+        <h2 id="search-heading">Search for Books</h2>
 
-        <p id="details-message" aria-live="polite"></p>
+        <p>
+          Enter a book title or keywords. Select a book from the results to view
+          its details below.
+        </p>
 
-        <div id="book-details"></div>
+        <form id="search-form" novalidate>
+          <label for="search-input">Book title or keywords</label>
+
+          <div class="search-controls">
+            <input
+              type="search"
+              id="search-input"
+              name="query"
+              placeholder="Example: The Hobbit"
+              aria-describedby="search-help"
+              required
+            />
+
+            <button type="submit" id="search-button">Search</button>
+          </div>
+
+          <p id="search-help">View up to 50 results, with 10 books per page.</p>
+        </form>
+
+        <!-- JavaScript displays validation or loading feedback here. -->
+        <p id="search-message" role="status"></p>
       </section>
+
+      <!-- 2. Search results -->
+      <section id="results-section" aria-labelledby="results-heading">
+        <h2 id="results-heading">Search Results</h2>
+
+        <p id="results-summary">Submit a search to find books.</p>
+
+        <!-- JavaScript inserts the current page of book cards here. -->
+        <div id="search-results" class="results-grid" aria-busy="false"></div>
+
+        <!-- 3. Pagination: hidden until results are available -->
+        <div id="pagination" class="pagination" hidden>
+          <button type="button" id="previous-page" disabled>Previous</button>
+
+          <span id="page-indicator" role="status"></span>
+
+          <button type="button" id="next-page" disabled>Next</button>
+        </div>
+      </section>
+
+      <!-- 4. Selected-book details -->
+      <section id="details-section" aria-labelledby="details-heading">
+        <h2 id="details-heading">Selected Book Details</h2>
+
+        <p id="details-message" role="status">
+          Select a book from the search results or collection.
+        </p>
+
+        <!-- JavaScript inserts the selected book's information here. -->
+        <div id="details-content" aria-busy="false"></div>
+      </section>
+
+      <!-- 5. Predefined subject collection -->
+      <section id="collection-section" aria-labelledby="collection-heading">
+        <h2 id="collection-heading">Science Fiction Collection</h2>
+
+        <p>
+          Explore up to 10 science fiction books from Open Library. Select a
+          book to view its details.
+        </p>
+
+        <p id="collection-message" role="status"></p>
+
+        <!-- Use the same book-card layout as the search results. -->
+        <div
+          id="collection-results"
+          class="results-grid"
+          aria-busy="false"
+        ></div>
+      </section>
+
+      <noscript>
+        <p>
+          JavaScript must be enabled to search for books and display the
+          collection.
+        </p>
+      </noscript>
     </main>
 
     <footer>
-      <p>Individual Project Milestone 2 |Book Details Page</p>
+      <p>Individual Project Milestone 3 |Open Library Application</p>
     </footer>
-
-    <script>
-      const parameters = new URLSearchParams(window.location.search);
-      const workId = parameters.get("workId");
-
-      const detailsMessage = document.getElementById("details-message");
-      const detailsContainer = document.getElementById("book-details");
-
-      async function loadBookDetails() {
-        if (!workId) {
-          detailsMessage.textContent =
-            "No book selected. Return to Home and click a book title.";
-          return;
-        }
-
-        detailsMessage.textContent = "Loading book details...";
-
-        try {
-          const response = await fetch(
-            "https://openlibrary.org/works/" +
-              encodeURIComponent(workId) +
-              ".json",
-          );
-
-          if (!response.ok) {
-            throw new Error("Request failed: " + response.status);
-          }
-
-          const book = await response.json();
-
-          const title = document.createElement("h3");
-          title.textContent = book.title || "Untitled book";
-          detailsContainer.appendChild(title);
-
-          const idParagraph = document.createElement("p");
-          idParagraph.textContent = "Work ID: " + workId;
-          detailsContainer.appendChild(idParagraph);
-
-          const coverId = book.covers?.find((id) => id > 0);
-
-          if (coverId) {
-            const cover = document.createElement("img");
-
-            cover.src = `https://covers.openlibrary.org/b/id/${coverId}-M.jpg?default=false`;
-            cover.alt = "Cover of " + (book.title || "selected book");
-            cover.className = "cover-image";
-
-            cover.addEventListener("error", function () {
-              cover.replaceWith(document.createTextNode("No cover available"));
-            });
-
-            detailsContainer.appendChild(cover);
-          } else {
-            const fallback = document.createElement("p");
-            fallback.textContent = "No cover available.";
-            detailsContainer.appendChild(fallback);
-          }
-
-          const descriptionHeading = document.createElement("h3");
-          descriptionHeading.textContent = "Description";
-          detailsContainer.appendChild(descriptionHeading);
-
-          const description = document.createElement("p");
-          description.textContent =
-            typeof book.description === "string"
-              ? book.description
-              : book.description?.value || "No description available.";
-
-          detailsContainer.appendChild(description);
-
-          const subjectsHeading = document.createElement("h3");
-          subjectsHeading.textContent = "Subjects";
-          detailsContainer.appendChild(subjectsHeading);
-
-          if (book.subjects && book.subjects.length > 0) {
-            const subjectsList = document.createElement("ul");
-
-            book.subjects.slice(0, 10).forEach((subject) => {
-              const item = document.createElement("li");
-              item.textContent = subject;
-              subjectsList.appendChild(item);
-            });
-
-            detailsContainer.appendChild(subjectsList);
-          } else {
-            const fallback = document.createElement("p");
-            fallback.textContent = "No subjects available.";
-            detailsContainer.appendChild(fallback);
-          }
-
-          const linkParagraph = document.createElement("p");
-          const libraryLink = document.createElement("a");
-
-          libraryLink.href =
-            "https://openlibrary.org/works/" + encodeURIComponent(workId);
-          libraryLink.textContent = "View this book on Open Library";
-
-          linkParagraph.appendChild(libraryLink);
-          detailsContainer.appendChild(linkParagraph);
-
-          detailsMessage.textContent = "";
-        } catch (error) {
-          console.error("Error loading book details:", error);
-          detailsMessage.textContent =
-            "Unable to load this book. Please try again.";
-        }
-      }
-
-      loadBookDetails();
-    </script>
+    <!-- Load jQuery before the application script. -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="milestone3.js"></script>
   </body>
 </html>
