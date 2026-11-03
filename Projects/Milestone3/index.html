@@ -4,9 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Milestone 3 | Open Library Book Search</title>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
     <link rel="stylesheet" href="milestone3.css" />
   </head>
 
@@ -37,12 +34,12 @@
         </p>
 
         <form id="search-form" novalidate>
-          <label for="search-input">Book title or keywords</label>
+          <label for="search">Book title or keywords</label>
 
           <div class="search-controls">
             <input
               type="search"
-              id="search-input"
+              id="search"
               name="query"
               placeholder="Example: The Hobbit"
               aria-describedby="search-help"
@@ -63,18 +60,12 @@
       <section id="results-section" aria-labelledby="results-heading">
         <h2 id="results-heading">Search Results</h2>
 
-        <p id="results-summary">Submit a search to find books.</p>
+        <!-- JavaScript inserts the current page of book cards here -->
+        <div id="books-list" class="results-grid" aria-busy="false"></div>
 
-        <!-- JavaScript inserts the current page of book cards here. -->
-        <div id="search-results" class="results-grid" aria-busy="false"></div>
-
-        <!-- 3. Pagination: hidden until results are available -->
         <div id="pagination" class="pagination" hidden>
-          <button type="button" id="previous-page" disabled>Previous</button>
-
-          <span id="page-indicator" role="status"></span>
-
-          <button type="button" id="next-page" disabled>Next</button>
+          <label for="page-select">Results page:</label>
+          <select id="page-select"></select>
         </div>
       </section>
 
@@ -102,11 +93,7 @@
         <p id="collection-message" role="status"></p>
 
         <!-- Use the same book-card layout as the search results. -->
-        <div
-          id="collection-results"
-          class="results-grid"
-          aria-busy="false"
-        ></div>
+        <div id="collection-list" class="results-grid" aria-busy="false"></div>
       </section>
 
       <noscript>
