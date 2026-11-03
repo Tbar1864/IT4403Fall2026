@@ -249,89 +249,89 @@ async function loadBookDetails(workId, authors = []) {
     console.error("Error loading book details:", error);
     detailsMessage.textContent = "Unable to load this book. Please try again.";
   }
-  const collectionSubject = "science_fiction";
-  const collectionList = document.getElementById("collection-list");
-  const collectionMessage = document.getElementById("collection-message");
+}
+const collectionSubject = "science_fiction";
+const collectionList = document.getElementById("collection-list");
+const collectionMessage = document.getElementById("collection-message");
 
-  async function loadCollection() {
-    collectionList.replaceChildren();
-    collectionMessage.textContent = "Loading collection...";
+async function loadCollection() {
+  collectionList.replaceChildren();
+  collectionMessage.textContent = "Loading collection...";
 
-    try {
-      const data = await $.ajax({
-        url:
-          "https://openlibrary.org/subjects/" +
-          collectionSubject +
-          ".json?limit=10",
-        method: "GET",
-        dataType: "json",
-        timeout: 15000,
-      });
+  try {
+    const data = await $.ajax({
+      url:
+        "https://openlibrary.org/subjects/" +
+        collectionSubject +
+        ".json?limit=10",
+      method: "GET",
+      dataType: "json",
+      timeout: 15000,
+    });
 
-      const works = data.works || [];
+    const works = data.works || [];
 
-      if (works.length === 0) {
-        collectionMessage.textContent = "No books found in this collection.";
-        return;
-      }
+    if (works.length === 0) {
+      collectionMessage.textContent = "No books found in this collection.";
+      return;
+    }
 
-      works.forEach((work) => {
-        const workId = work.key.split("/").pop();
-        const authors = (work.authors || []).map((author) => author.name);
+    works.forEach((work) => {
+      const workId = work.key.split("/").pop();
+      const authors = (work.authors || []).map((author) => author.name);
 
-        const bookCard = document.createElement("article");
-        bookCard.className = "book-card";
+      const bookCard = document.createElement("article");
+      bookCard.className = "book-card";
 
-        const coverContainer = document.createElement("div");
-        coverContainer.className = "cover-container";
+      const coverContainer = document.createElement("div");
+      coverContainer.className = "cover-container";
 
-        if (work.cover_id) {
-          const cover = document.createElement("img");
-          cover.src = `https://covers.openlibrary.org/b/id/${work.cover_id}-S.jpg?default=false`;
-          cover.alt = "Cover of " + (work.title || "selected book");
-          cover.className = "cover-image";
+      if (work.cover_id) {
+        const cover = document.createElement("img");
+        cover.src = `https://covers.openlibrary.org/b/id/${work.cover_id}-S.jpg?default=false`;
+        cover.alt = "Cover of " + (work.title || "selected book");
+        cover.className = "cover-image";
 
-          cover.addEventListener("error", function () {
-            const fallback = document.createElement("p");
-            fallback.className = "no-cover";
-            fallback.textContent = "No cover available.";
-            cover.replaceWith(fallback);
-          });
-
-          coverContainer.appendChild(cover);
-        } else {
+        cover.addEventListener("error", function () {
           const fallback = document.createElement("p");
           fallback.className = "no-cover";
           fallback.textContent = "No cover available.";
-          coverContainer.appendChild(fallback);
-        }
-
-        const titleHeading = document.createElement("h3");
-        const titleButton = document.createElement("button");
-
-        titleButton.type = "button";
-        titleButton.className = "book-title-button";
-        titleButton.textContent = work.title || "Untitled book";
-
-        titleButton.addEventListener("click", function () {
-          loadBookDetails(workId, authors);
+          cover.replaceWith(fallback);
         });
 
-        titleHeading.appendChild(titleButton);
+        coverContainer.appendChild(cover);
+      } else {
+        const fallback = document.createElement("p");
+        fallback.className = "no-cover";
+        fallback.textContent = "No cover available.";
+        coverContainer.appendChild(fallback);
+      }
 
-        bookCard.appendChild(coverContainer);
-        bookCard.appendChild(titleHeading);
+      const titleHeading = document.createElement("h3");
+      const titleButton = document.createElement("button");
 
-        collectionList.appendChild(bookCard);
+      titleButton.type = "button";
+      titleButton.className = "book-title-button";
+      titleButton.textContent = work.title || "Untitled book";
+
+      titleButton.addEventListener("click", function () {
+        loadBookDetails(workId, authors);
       });
 
-      collectionMessage.textContent = "Showing " + works.length + " books.";
-    } catch (error) {
-      console.error("Error loading collection:", error);
-      collectionMessage.textContent =
-        "Unable to load the collection. Please try again later.";
-    }
-  }
+      titleHeading.appendChild(titleButton);
 
-  loadCollection();
+      bookCard.appendChild(coverContainer);
+      bookCard.appendChild(titleHeading);
+
+      collectionList.appendChild(bookCard);
+    });
+
+    collectionMessage.textContent = "Showing " + works.length + " books.";
+  } catch (error) {
+    console.error("Error loading collection:", error);
+    collectionMessage.textContent =
+      "Unable to load the collection. Please try again later.";
+  }
 }
+
+loadCollection();
