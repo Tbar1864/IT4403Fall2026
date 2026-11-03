@@ -136,5 +136,120 @@ async function loadPage(page) {
     pagination.hidden = true;
   } finally {
     pageSelect.disabled = false;
+    searchButton.disabled = false;
+  }
+  const detailsMessage = document.getElementById("details-message");
+  const detailsContainer = document.getElementById("details-content");
+
+  let detailsRequestId = 0;
+
+  async function loadBookDetails(workId, authors = []) {
+    const requestId = ++detailsRequestId;
+    detailsContainer.replaceChildren();
+    document
+      .getElementById("details-section")
+      .scrollIntoView({ behavior: "smooth" });
+
+    if (!workId) {
+      detailsMessage.textContent = "No book selected.";
+      return;
+    }
+
+    detailsMessage.textContent = "Loading book details...";
+
+    try {
+      const book = await $.ajax({
+        url:
+          "https://openlibrary.org/works/" +
+          encodeURIComponent(workId) +
+          ".json",
+        method: "GET",
+        dataType: "json",
+        timeout: 15000,
+      });
+
+      if (requestId !== detailsRequestId) return;
+
+      const title = document.createElement("h3");
+      title.textContent = book.title || "Untitled book";
+      detailsContainer.appendChild(title);
+
+      const idParagraph = document.createElement("p");
+      idParagraph.textContent = "Work ID: " + workId;
+      detailsContainer.appendChild(idParagraph);
+
+      const authorParagraph = document.createElement("p");
+      authorParagraph.textContent =
+        "Author(s): " +
+        (authors.length > 0 ? authors.join(", ") : "Unknown author");
+      detailsContainer.appendChild(authorParagraph);
+
+      const coverId = book.covers?.find((id) => id > 0);
+
+      if (coverId) {
+        const cover = document.createElement("img");
+        cover.src = `https://covers.openlibrary.org/b/id/${coverId}-M.jpg?default=false`;
+        cover.alt = "Cover of " + (book.title || "selected book");
+        cover.className = "cover-image";
+
+        cover.addEventListener("error", function () {
+          const fallback = document.createElement("p");
+          fallback.className = "no-cover";
+          fallback.textContent = "No cover available.";
+          cover.replaceWith(fallback);
+        });
+
+        detailsContainer.appendChild(cover);
+      } else {
+        const fallback = document.createElement("p");
+        fallback.className = "no-cover";
+        fallback.textContent = "No cover available.";
+        detailsContainer.appendChild(fallback);
+      }
+
+      const descriptionHeading = document.createElement("h3");
+      descriptionHeading.textContent = "Description";
+      detailsContainer.appendChild(descriptionHeading);
+
+      const description = document.createElement("p");
+      description.textContent =
+        typeof book.description === "string"
+          ? book.description
+          : book.description?.value || "No description available.";
+      detailsContainer.appendChild(description);
+
+      const subjectsHeading = document.createElement("h3");
+      subjectsHeading.textContent = "Subjects";
+      detailsContainer.appendChild(subjectsHeading);
+
+      if (book.subjects && book.subjects.length > 0) {
+        const subjectsList = document.createElement("ul");
+        book.subjects.slice(0, 10).forEach((subject) => {
+          const item = document.createElement("li");
+          item.textContent = subject;
+          subjectsList.appendChild(item);
+        });
+        detailsContainer.appendChild(subjectsList);
+      } else {
+        const fallback = document.createElement("p");
+        fallback.textContent = "No subjects available.";
+        detailsContainer.appendChild(fallback);
+      }
+
+      const linkParagraph = document.createElement("p");
+      const libraryLink = document.createElement("a");
+      libraryLink.href =
+        "https://openlibrary.org/works/" + encodeURIComponent(workId);
+      libraryLink.textContent = "View this book on Open Library";
+      linkParagraph.appendChild(libraryLink);
+      detailsContainer.appendChild(linkParagraph);
+
+      detailsMessage.textContent = "";
+    } catch (error) {
+      if (requestId !== detailsRequestId) return;
+      console.error("Error loading book details:", error);
+      detailsMessage.textContent =
+        "Unable to load this book. Please try again.";
+    }
   }
 }
