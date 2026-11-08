@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery AJAX load HTML (AJAH) - Lab 6 Activity 1 (Modified)</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+<style>
+    /* Added: simple styling so the response areas and success messages stand out */
+    .response-heading { margin-bottom: 4px; color: #2a4d8f; }
+    .ajax-area { border: 1px solid #ccc; padding: 8px 12px; min-height: 30px; margin-bottom: 20px; }
+    .success-msg { color: #1a7f37; font-weight: bold; }
+    #pageLoadTime { font-style: normal; color: #555; }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function ()
+    {
+        // MODIFIED: record when the full page was loaded.
+        // If AJAX works correctly, this time will NOT change when the buttons are clicked.
+        $("#pageLoadTime").text(new Date().toLocaleTimeString());
+
+        // MODIFIED: counter that keeps its value between clicks (it would reset on a full page reload)
+        var requestCount = 0;
+
+        // MODIFIED: helper that builds the additional success content
+        function successMessage(methodName)
+        {
+            requestCount++;
+            return "<p class='success-msg'>Success! Updated content was loaded with " + methodName +
+                   " at " + new Date().toLocaleTimeString() +
+                   " without refreshing the page. (Total AJAX requests this visit: " + requestCount + ")</p>";
+        }
+
+        //use the load function
+        $("#button1").click(function ()
+        {
+            // MODIFIED: added a callback so a success message is shown after the content loads
+            $("#ajaxDiv1").load("ajax-dynamic-response.php", function (response, status)
+            {
+                if (status === "success")
+                {
+                    $(this).append(successMessage(".load()"));
+                }
+            }).hide().fadeIn("slow");
+        });
+
+        //use the .get function
+        $("#button2").click(function ()
+        {
+            $.get("ajax-dynamic-response.php?parameter=5000", function (data)
+            {
+                // MODIFIED: display the server response plus an additional success message
+                $("#ajaxDiv2").html(data + successMessage(".get()")).hide().fadeIn("slow");
+            });
+        });
+        
+        //use .ajax function, and an alternative way to send a parameter
+        $("#button3").click(function ()
+        {
+            $.ajax("ajax-dynamic-response.php", {data:{parameter:15500}}).done(function (data)
+            {
+                // MODIFIED: display the server response plus an additional success message
+                $("#ajaxDiv3").html(data + successMessage(".ajax()")).hide().animate({ opacity: "show" }, { duration: "slow" });
+            });
+        });
+    });
+</script>
+
+</head>
+<body>
+    <!-- Added: link back to the Lab Work page on my website -->
+    <p><a href="../../lab-work.html">&larr; Back to Lab Work</a></p>
+    <h1>jQuery AJAX loading HTML using .load(), .get(), .ajax()</h1>
+    <p>This demo shows how jQuery AJAX methods (.load(), .get(), and .ajax()) request data from a server and dynamically update parts of a webpage without reloading the page. jQuery AJAX methods make AJAX easier and shorter to write.</p>
+    <!-- MODIFIED: shows when the full page loaded; it stays the same after AJAX requests -->
+    <p>Page originally loaded at: <strong id="pageLoadTime"></strong></p>
+
+	<h2>Load partial page content using .load() - no parameter</h2>
+    <!-- MODIFIED: new button text -->
+    <input type="button" id="button1" value="Load Updated Content" />
+    <!-- MODIFIED: heading added above the AJAX response area -->
+    <h3 class="response-heading">AJAX Response Area 1 (.load())</h3>
+    <div id="ajaxDiv1" class="ajax-area"></div>
+
+    <h2>Load partial page content using .get() - parameter value 5000</h2>
+    <input type="button" id="button2" value="Load Updated Content" />
+    <h3 class="response-heading">AJAX Response Area 2 (.get())</h3>
+    <div id="ajaxDiv2" class="ajax-area"></div>
+
+    <h2>Load partial page content using .ajax() - parameter value 15500</h2>
+    <input type="button" id="button3" value="Load Updated Content" />
+    <h3 class="response-heading">AJAX Response Area 3 (.ajax())</h3>
+    <div id="ajaxDiv3" class="ajax-area"></div>
+
+</body>
+</html>
