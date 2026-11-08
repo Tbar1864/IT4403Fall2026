@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery AJAX call errors</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function ()
+    {
+        $("#button1").click(function ()
+        {
+            $("#ajaxDiv1").load("https://www.googleapis.com/books/v1/volumes?q=php%20mysql").hide().fadeIn("slow");
+        });
+		
+		$("#button2").click(function ()
+        {
+            $("#ajaxDiv1").load("https://www.googleapis.com/books/v1/volumes?q=php%20mysql").hide().fadeIn("slow");
+        });
+    });
+</script>
+
+</head>
+<body>
+    <h1>Fix errors: Request some content from https://www.googleapis.com/books/v1/volumes?q=php%20mysql</h1>
+	<form>
+    <input type="button" id="button1" value="Click me to load some partial page content" />
+	</form>
+	
+	<a href="#" id="button2">Click me to load some content</a>
+	
+	<h2>Load content in AJAX way here</h2>
+
+    <div id="ajaxDiv1"></div>
+
+</body>
+</html>

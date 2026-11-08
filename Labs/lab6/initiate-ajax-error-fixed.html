@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>jQuery AJAX call errors - Fixed</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var url = "https://www.googleapis.com/books/v1/volumes?q=php%20mysql";
+
+            function loadBooks() {
+                $("#ajaxDiv1").html("<p>Loading...</p>");
+
+                $.getJSON(url)
+                    .done(function (data) {
+                        console.log("AJAX success:", data);   // verify in DevTools Console
+                        var html = "<ul>";
+                        $.each(data.items || [], function (i, item) {
+                            var info = item.volumeInfo;
+                            var authors = info.authors ? info.authors.join(", ") : "Unknown author";
+                            html += "<li><strong>" + info.title + "</strong> &ndash; " + authors + "</li>";
+                        });
+                        html += "</ul>";
+                        $("#ajaxDiv1").html(html).hide().fadeIn("slow");
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        console.log("AJAX error:", textStatus, errorThrown);
+                        $("#ajaxDiv1").html("<p>Error loading content: " + textStatus + "</p>");
+                    });
+            }
+
+            // FIX 1: stop the form from submitting (which reloads the page)
+            $("#button1").click(function (event) {
+                event.preventDefault();
+                loadBooks();
+            });
+
+            // FIX 2: stop the link from following href="#" (jump to top / reload)
+            $("#button2").click(function (event) {
+                event.preventDefault();
+                loadBooks();
+            });
+
+            // FIX 3: also block a submit triggered by pressing Enter in the form
+            $("form").on("submit", function (event) {
+                event.preventDefault();
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Fix errors: Request some content from https://www.googleapis.com/books/v1/volumes?q=php%20mysql</h1>
+
+    <form>
+        <input type="button" id="button1" value="Click me to load some partial page content" />
+    </form>
+
+    <a href="#" id="button2">Click me to load some content</a>
+
+    <h2>Load content in AJAX way here</h2>
+
+    <div id="ajaxDiv1"></div>
+</body>
+</html>
