@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task 2: ZIP Code Lookup</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+  <nav><a href="index.html">Home</a></nav>
+  <h1>ZIP Code Lookup</h1>
+
+  <label for="zip">U.S. ZIP code:</label>
+  <!-- type="text" preserves leading zeros (e.g. 02134) -->
+  <input type="text" id="zip" maxlength="5" inputmode="numeric" placeholder="e.g. 30303">
+  <br><br>
+  <button id="btnFetch">Lookup with fetch()</button>
+  <button id="btnAjax">Lookup with $.ajax()</button>
+  <button id="btnGetJSON">Lookup with $.getJSON()</button>
+
+  <div id="status" class="status"></div>
+  <div id="results" class="result"></div>
+
+  <script>
+    const API = "https://api.zippopotam.us/us/";
+
+    // ---------- shared helpers ----------
+    function getValidZip() {
+      const zip = document.getElementById("zip").value.trim();
+      document.getElementById("results").innerHTML = "";
+      if (!/^\d{5}$/.test(zip)) {
+        showError("Please enter exactly five digits (e.g. 30303).");
+        return null;
+      }
+      setStatus("Loading location for " + zip + "...");
+      return zip;
+    }
+
+    function setStatus(msg) { document.getElementById("status").textContent = msg; }
+    function showError(msg) {
+      document.getElementById("status").innerHTML = '<span class="error"></span>';
+      document.querySelector("#status .error").textContent = msg;
+    }
+
+    // Displays every place in the nested "places" array
+    function displayResults(data, method) {
+      const places = data.places || [];
+      if (places.length === 0) {
+        showError("No places were returned for this ZIP code.");
+        return;
+      }
+      setStatus("Results via " + method + ":");
+
+      const out = document.getElementById("results");
+      const header = document.createElement("p");
+      header.textContent = "ZIP " + data["post code"] + " – " + data["country"] +
+                           " (" + places.length + " place" + (places.length > 1 ? "s" : "") + ")";
+      out.appendChild(header);
+
+      const ul = document.createElement("ul");
+      places.forEach(function (p) {
+        const li = document.createElement("li");
+        // bracket notation for property names that contain spaces
+        li.textContent = p["place name"] + ", " + p["state"] + " (" + p["state abbreviation"] + ")";
+        ul.appendChild(li);
+      });
+      out.appendChild(ul);
+    }
+
+    function handleFailure(status, zip) {
+      if (status === 404) showError("ZIP code " + zip + " was not found.");
+      else showError("Request failed (" + (status || "network error") + "). Please try again.");
+    }
+
+    // ---------- Method 1: plain JavaScript fetch() ----------
+    document.getElementById("btnFetch").addEventListener("click", async function () {
+      const zip = getValidZip();
+      if (!zip) return;
+      try {
+        const response = await fetch(API + zip);
+        if (!response.ok) {                      // fetch does not reject on 404
+          handleFailure(response.status, zip);
+          return;
+        }
+        const data = await response.json();
+        displayResults(data, "fetch()");
+      } catch (err) {
+        handleFailure(0, zip);                   // network / CORS failure
+      }
+    });
+
+    // ---------- Method 2: jQuery $.ajax() ----------
+    $("#btnAjax").on("click", function () {
+      const zip = getValidZip();
+      if (!zip) return;
+      $.ajax({ url: API + zip, method: "GET", dataType: "json" })
+        .done(function (data) { displayResults(data, "$.ajax()"); })
+        .fail(function (jqXHR) { handleFailure(jqXHR.status, zip); });
+    });
+
+    // ---------- Method 3: jQuery $.getJSON() ----------
+    $("#btnGetJSON").on("click", function () {
+      const zip = getValidZip();
+      if (!zip) return;
+      $.getJSON(API + zip)                       // no callback=? → plain JSON over CORS
+        .done(function (data) { displayResults(data, "$.getJSON()"); })
+        .fail(function (jqXHR) { handleFailure(jqXHR.status, zip); });
+    });
+  </script>
+</body>
+</html>

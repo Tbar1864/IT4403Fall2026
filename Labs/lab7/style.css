@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+input { padding: .4rem; width: 240px; }
+button { padding: .4rem .8rem; margin-left: .25rem; cursor: pointer; }
+.status { margin-top: 1rem; font-style: italic; }
+.error { color: #b00020; font-style: normal; }
+.result { margin-top: 1rem; }
+.book { border-bottom: 1px solid #ccc; padding: .5rem 0; }
+nav a { margin-right: 1rem; }

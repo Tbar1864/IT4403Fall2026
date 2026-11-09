@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task 3: Open Library Book Search</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+  <nav><a href="index.html">Home</a></nav>
+  <h1>Open Library Book Search</h1>
+
+  <label for="query">Title or keyword:</label>
+  <input type="text" id="query" placeholder="e.g. javascript">
+  <button id="btnSearch">Search</button>
+
+  <div id="status" class="status"></div>
+  <div id="results" class="result"></div>
+
+  <script>
+    $(function () {
+      $("#btnSearch").on("click", searchBooks);
+      $("#query").on("keydown", function (e) { if (e.key === "Enter") searchBooks(); });
+
+      function searchBooks() {
+        const q = $("#query").val().trim();
+        $("#results").empty();                         // replace previous results
+
+        if (q === "") {
+          $("#status").html('<span class="error">Please enter a title or keyword.</span>');
+          return;
+        }
+
+        $("#status").text("Searching Open Library...");
+
+        $.ajax({
+          url: "https://openlibrary.org/search.json",
+          method: "GET",
+          dataType: "json",
+          data: {
+            q: q,
+            limit: 5,
+            fields: "key,title,author_name,first_publish_year,edition_count"
+          }
+        })
+        .done(function (data) {
+          const docs = data.docs || [];
+          if (docs.length === 0) {
+            $("#status").text('No books found for "' + q + '".');
+            return;
+          }
+
+          $("#status").text("Showing " + docs.length + " of " +
+                            (data.numFound || docs.length) + " matches:");
+
+          docs.forEach(function (book) {
+            const title   = book.title || "Untitled";
+            const authors = (book.author_name && book.author_name.length)
+                              ? book.author_name.join(", ") : "Unknown author";
+            const year    = book.first_publish_year || "Unknown";
+            const editions = (book.edition_count !== undefined) ? book.edition_count : "N/A";
+
+            const $div = $('<div class="book">');
+            const $title = book.key
+              ? $("<a>").attr({ href: "https://openlibrary.org" + book.key,
+                                target: "_blank", rel: "noopener" }).text(title)
+              : $("<span>").text(title);
+            $div.append($("<strong>").append($title));
+            $div.append($("<div>").text("Author(s): " + authors));
+            $div.append($("<div>").text("First published: " + year));
+            $div.append($("<div>").text("Editions: " + editions));
+            $("#results").append($div);
+          });
+        })
+        .fail(function (jqXHR, textStatus) {
+          $("#status").html('<span class="error">Request failed (' +
+            (jqXHR.status || textStatus) + '). Please try again later.</span>');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

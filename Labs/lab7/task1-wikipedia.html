@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task 1: Wikipedia Suggestions</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+  <nav><a href="index.html">Home</a></nav>
+  <h1>Wikipedia Search Suggestions</h1>
+
+  <label for="term">Search term:</label>
+  <input type="text" id="term" placeholder="e.g. data">
+  <button id="btnSuggest">Get Suggestions</button>
+
+  <div id="status" class="status"></div>
+  <ul id="results" class="result"></ul>
+
+  <script>
+    $(function () {
+      $("#btnSuggest").on("click", getSuggestions);
+      // Let Enter trigger the button (still button-driven, not per keystroke)
+      $("#term").on("keydown", function (e) { if (e.key === "Enter") getSuggestions(); });
+
+      function getSuggestions() {
+        const term = $("#term").val().trim();
+        $("#results").empty();                       // replace previous suggestions
+
+        if (term === "") {                           // reject empty input
+          $("#status").html('<span class="error">Please enter a search term.</span>');
+          return;
+        }
+
+        $("#status").text("Loading suggestions...");
+
+        $.ajax({
+          url: "https://en.wikipedia.org/w/api.php",
+          method: "GET",
+          dataType: "json",                          // ordinary JSON, not JSONP
+          data: {
+            action: "opensearch",
+            search: term,
+            limit: 5,
+            format: "json",
+            origin: "*"                              // MediaWiki anonymous CORS
+          }
+        })
+        .done(function (data) {
+          // data[0] = search term, data[1] = titles, data[3] = URLs
+          const titles = data[1] || [];
+          const urls = data[3] || [];
+
+          if (titles.length === 0) {
+            $("#status").text('No Wikipedia articles matched "' + term + '".');
+            return;
+          }
+
+          $("#status").text('Suggestions for "' + data[0] + '":');
+          for (let i = 0; i < titles.length; i++) {  // match by array position
+            const link = $("<a>").attr({ href: urls[i], target: "_blank", rel: "noopener" })
+                                 .text(titles[i]);
+            $("#results").append($("<li>").append(link));
+          }
+        })
+        .fail(function (jqXHR, textStatus) {
+          $("#status").html('<span class="error">Request failed (' +
+            (jqXHR.status || textStatus) + '). Please try again later.</span>');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
