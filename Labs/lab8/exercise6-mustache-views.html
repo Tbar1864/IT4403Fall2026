@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 6: Two Mustache Templates, Two Views | Lab 8</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js"></script>
+  <!-- Mustache template: {{#items}} ... {{/items}} repeats once per book -->
+  <script id="booktemplate" type="text/template">
+    {{#items}}
+    <div class="book">
+      <h3>{{title}}</h3>
+      {{#thumbnail}}<img src="{{thumbnail}}" alt="Cover of {{title}}">{{/thumbnail}}
+      {{^thumbnail}}<div class="nocover">No cover</div>{{/thumbnail}}
+      <div class="info">
+        <h3 class="list-title">{{title}}</h3>
+        <p class="authors">{{authors}}</p>
+        <p class="desc">{{shortDescription}}</p>
+      </div>
+    </div>
+    {{/items}}
+  </script>
+  <!-- Second Mustache template: a detailed view of each book -->
+  <script id="detailtemplate" type="text/template">
+    {{#items}}
+    <article class="detail">
+      <div class="detail-head"><span class="badge">{{number}}</span><h3>{{title}}</h3></div>
+      {{#thumbnail}}<img src="{{thumbnail}}" alt="Cover of {{title}}">{{/thumbnail}}
+      {{^thumbnail}}<div class="nocover">No cover</div>{{/thumbnail}}
+      <div class="detail-body">
+        {{#subtitle}}<p class="subtitle">{{subtitle}}</p>{{/subtitle}}
+        <table>
+          <tr><th>Author(s)</th><td>{{authors}}</td></tr>
+          <tr><th>Publisher</th><td>{{publisher}}</td></tr>
+          <tr><th>Published</th><td>{{publishedDate}}</td></tr>
+          <tr><th>Pages</th><td>{{pageCount}}</td></tr>
+          <tr><th>Category</th><td>{{categories}}</td></tr>
+        </table>
+        <p>{{description}}</p>
+        <a href="{{link}}" target="_blank" rel="noopener">View on Google Books</a>
+      </div>
+    </article>
+    {{/items}}
+  </script>
+  <style>
+    :root { --black:#000; --gold:#f5b335; --bg:#f4f5f7; --text:#202124; --muted:#5f6368; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+    header { padding:18px 6%; color:#fff; background:var(--black); border-bottom:6px solid var(--gold); }
+    header p { margin:0 0 4px; color:var(--gold); font-weight:bold; }
+    header h1 { margin:0; font-size:clamp(1.3rem, 3.5vw, 2rem); }
+    main { max-width:1100px; margin:0 auto; padding:28px 6% 40px; }
+    .lead { color:var(--muted); margin-top:14px; }
+    .button, button { display:inline-block; padding:9px 15px; margin:4px 4px 4px 0; color:#fff; background:var(--black);
+      border:2px solid var(--black); border-radius:3px; font:bold 0.95rem Arial, Helvetica, sans-serif; text-decoration:none; cursor:pointer; }
+    .button:hover, .button:focus, button:hover, button:focus { color:#000; background:var(--gold); outline:2px solid #000; outline-offset:2px; }
+    button.active { color:#000; background:var(--gold); }
+    .toolbar { margin:14px 0; }
+    input[type=text] { padding:9px; font-size:1rem; border:2px solid #999; border-radius:3px; width:min(320px, 100%); }
+    .status { color:var(--muted); margin:10px 0; min-height:1.5em; }
+    .status.error { color:#b00020; font-weight:bold; }
+    footer { padding:18px 6%; color:#fff; background:var(--black); text-align:center; font-size:0.9rem; }
+
+    /* ---- Flexbox container for the search results ---- */
+    #results { display:flex; flex-wrap:wrap; gap:10px; }
+    /* ---- Each book is also a flex container (a "card") ---- */
+    .book { display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; padding:10px; background:#fff;
+      border:1px solid #ccc; border-top:4px solid var(--gold); box-shadow:0 2px 6px rgba(0,0,0,.08); }
+    .book h3 { width:100%; margin:0; font-size:1rem; }
+    .book img, .book .nocover { width:80px; height:110px; object-fit:cover; flex-shrink:0; }
+    .book .nocover { display:flex; align-items:center; justify-content:center; background:#eee; color:#777; font-size:.75rem; text-align:center; }
+    .book .info { flex:1 1 120px; font-size:.88rem; }
+    .book .authors { margin:0 0 4px; color:var(--muted); font-style:italic; }
+    .book .desc { margin:0; }
+
+    /* ---- Layouts: the buttons only swap these classes on #results ---- */
+    #results.grid  .book { width:calc((100% - 30px) / 4); }   /* 4 per row (10px gap x 3) */
+    #results.grid3 .book { width:calc((100% - 20px) / 3); }   /* 3 per row (10px gap x 2) */
+    #results.list  .book { width:100%; flex-wrap:nowrap; }     /* flow list: one per row */
+    .book .info .list-title { display:none; }
+    /* In list view and for the featured first item, the title moves beside the cover */
+    #results.list .book > h3, #results.feature-first .book:first-child > h3 { display:none; }
+    #results.list .book .info .list-title, #results.feature-first .book:first-child .info .list-title { display:block; margin-bottom:4px; }
+    #results.feature-first .book:first-child { width:100%; flex-wrap:nowrap; background:#fff8e6; }
+    @media (max-width:700px) { #results.grid .book, #results.grid3 .book { width:calc((100% - 10px) / 2); } }
+    @media (max-width:440px) { #results .book { width:100% !important; } }
+
+    /* ---- Detail view (second template) ---- */
+    #results.details { flex-direction:column; }
+    .detail { display:flex; flex-wrap:wrap; gap:12px; padding:12px; background:#fff; border-left:5px solid var(--gold); box-shadow:0 2px 6px rgba(0,0,0,.08); }
+    .detail-head { display:flex; align-items:center; gap:10px; width:100%; }
+    .detail-head h3 { margin:0; }
+    .badge { display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:50%; background:var(--black); color:var(--gold); font-weight:bold; }
+    .detail img, .detail .nocover { width:110px; height:160px; object-fit:cover; }
+    .detail .nocover { display:flex; align-items:center; justify-content:center; background:#eee; color:#777; }
+    .detail-body { flex:1 1 300px; font-size:.92rem; }
+    .detail .subtitle { margin:0 0 6px; color:var(--muted); font-style:italic; }
+    .detail table { border-collapse:collapse; margin-bottom:8px; }
+    .detail th { text-align:left; padding:2px 12px 2px 0; color:var(--muted); font-weight:normal; }
+    .detail a { color:#000; font-weight:bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <p>IT 4403 Lab 8: CSS Flexbox and Template</p>
+    <h1>Exercise 6: Two Mustache Templates, Two Views</h1>
+  </header>
+  <main>
+    <a class="button" href="../../lab-work.html">&larr; Back to Lab Work</a>
+    <p class="lead">Uses two different Mustache templates for the same search results. <strong>Card View</strong> shows a compact grid, and <strong>Detail View</strong> shows each book with its publisher, date, page count, category, and a link. The view buttons re-render the saved results without a new request.</p>
+    <form id="searchForm" class="toolbar">
+      <label for="searchTerm"><strong>Search books:</strong></label>
+      <input type="text" id="searchTerm" value="mobile web">
+      <button type="submit" id="button1">Search</button>
+    </form>
+    <div class="toolbar" role="group" aria-label="View buttons">
+      <strong>View:</strong>
+      <button type="button" id="btnCardView" class="active">Card View</button>
+      <button type="button" id="btnDetailView">Detail View</button>
+    </div>
+    <div id="status" class="status" aria-live="polite"></div>
+    <div id="results" class="grid"></div>
+  </main>
+  <footer>Student website for IT 4403 Advanced Web and Mobile Applications, Kennesaw State University.</footer>
+  <script>
+    // ---- Shared settings ----
+    // Optional: paste a free Google Books API key here if you see "quota exceeded" (HTTP 429).
+    const API_KEY = "";
+    function booksUrl(term) {
+      let url = "https://www.googleapis.com/books/v1/volumes?maxResults=20&q=" + encodeURIComponent(term);
+      if (API_KEY) url += "&key=" + API_KEY;
+      return url;
+    }
+    function showError(xhr) {
+      let msg = "The search failed. Check your internet connection and try again.";
+      if (xhr && xhr.status === 429) msg = "Google Books says the daily quota is used up (HTTP 429). Try again later, or add an API key in the API_KEY line of this page.";
+      $("#status").addClass("error").text(msg);
+    }
+
+    // Turn Google's JSON into simple fields so the template stays clean
+    // (Mustache is "logic-less", so missing covers/authors are handled here).
+    function toViewModel(jsonData) {
+      return {
+        items: jsonData.items.map(function (item, i) {
+          const v = item.volumeInfo || {};
+          const d = v.description || "No description available.";
+          return {
+            number: i + 1,
+            title: v.title || "Untitled",
+            subtitle: v.subtitle || "",
+            authors: (v.authors || ["Unknown author"]).join(", "),
+            thumbnail: v.imageLinks && v.imageLinks.smallThumbnail ? v.imageLinks.smallThumbnail.replace("http:", "https:") : "",
+            shortDescription: d.length > 140 ? d.slice(0, 140) + "..." : d,
+            description: d.length > 400 ? d.slice(0, 400) + "..." : d,
+            publisher: v.publisher || "N/A",
+            publishedDate: v.publishedDate || "N/A",
+            pageCount: v.pageCount || "N/A",
+            categories: (v.categories || ["N/A"]).join(", "),
+            link: v.previewLink || v.infoLink || "#"
+          };
+        })
+      };
+    }
+
+    let lastResults = null;          // saved so the view buttons don't need a new request
+    let currentView = "card";
+    function showView() {
+      if (!lastResults) return;
+      const isCard = currentView === "card";
+      const template = $(isCard ? "#booktemplate" : "#detailtemplate").html();
+      $("#results").removeClass("grid details").addClass(isCard ? "grid" : "details")
+                   .html(Mustache.render(template, lastResults));
+      $("#btnCardView").toggleClass("active", isCard);
+      $("#btnDetailView").toggleClass("active", !isCard);
+    }
+    $(function () {
+      $("#btnCardView").click(function () { currentView = "card"; showView(); });
+      $("#btnDetailView").click(function () { currentView = "detail"; showView(); });
+
+      $("#searchForm").submit(function (e) {
+        e.preventDefault();
+        const term = $.trim($("#searchTerm").val());
+        if (!term) { $("#status").addClass("error").text("Please type a search term."); return; }
+        $("#status").removeClass("error").text("Searching ...");
+        $.getJSON(booksUrl(term))
+          .done(function (jsonData) {
+            if (!jsonData.items || jsonData.items.length === 0) {
+              $("#results").html(""); $("#status").text("No books found for \"" + term + "\"."); return;
+            }
+            $("#status").text(jsonData.items.length + " books found for \"" + term + "\".");
+            lastResults = toViewModel(jsonData);
+            showView();
+          })
+          .fail(showError);
+      });
+      $("#searchForm").submit(); // run the default search when the page opens
+    });
+  </script>
+</body>
+</html>
