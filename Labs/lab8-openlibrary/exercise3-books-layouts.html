@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 3: Switching Flexbox Layouts | Lab 8 Open Library</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    :root { --black:#000; --gold:#f5b335; --bg:#f4f5f7; --text:#202124; --muted:#5f6368; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+    header { padding:18px 6%; color:#fff; background:var(--black); border-bottom:6px solid var(--gold); }
+    header p { margin:0 0 4px; color:var(--gold); font-weight:bold; }
+    header h1 { margin:0; font-size:clamp(1.3rem, 3.5vw, 2rem); }
+    main { max-width:1100px; margin:0 auto; padding:28px 6% 40px; }
+    .lead { color:var(--muted); margin-top:14px; }
+    .button, button { display:inline-block; padding:9px 15px; margin:4px 4px 4px 0; color:#fff; background:var(--black);
+      border:2px solid var(--black); border-radius:3px; font:bold 0.95rem Arial, Helvetica, sans-serif; text-decoration:none; cursor:pointer; }
+    .button:hover, .button:focus, button:hover, button:focus { color:#000; background:var(--gold); outline:2px solid #000; outline-offset:2px; }
+    button.active { color:#000; background:var(--gold); }
+    .toolbar { margin:14px 0; }
+    input[type=text] { padding:9px; font-size:1rem; border:2px solid #999; border-radius:3px; width:min(320px, 100%); }
+    .status { color:var(--muted); margin:10px 0; min-height:1.5em; }
+    .status.error { color:#b00020; font-weight:bold; }
+    footer { padding:18px 6%; color:#fff; background:var(--black); text-align:center; font-size:0.9rem; }
+
+    /* ---- Flexbox container for the search results ---- */
+    #results { display:flex; flex-wrap:wrap; gap:10px; }
+    /* ---- Each book is also a flex container (a "card") ---- */
+    .book { display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; padding:10px; background:#fff;
+      border:1px solid #ccc; border-top:4px solid var(--gold); box-shadow:0 2px 6px rgba(0,0,0,.08); }
+    .book h3 { width:100%; margin:0; font-size:1rem; }
+    .book img, .book .nocover { width:80px; height:110px; object-fit:cover; flex-shrink:0; }
+    .book .nocover { display:flex; align-items:center; justify-content:center; background:#eee; color:#777; font-size:.75rem; text-align:center; }
+    .book .info { flex:1 1 120px; font-size:.88rem; }
+    .book .authors { margin:0 0 4px; color:var(--muted); font-style:italic; }
+    .book .desc { margin:0; }
+
+    /* ---- Layouts: the buttons only swap these classes on #results ---- */
+    #results.grid  .book { width:calc((100% - 30px) / 4); }   /* 4 per row (10px gap x 3) */
+    #results.grid3 .book { width:calc((100% - 20px) / 3); }   /* 3 per row (10px gap x 2) */
+    #results.list  .book { width:100%; flex-wrap:nowrap; }     /* flow list: one per row */
+    .book .info .list-title { display:none; }
+    /* In list view and for the featured first item, the title moves beside the cover */
+    #results.list .book > h3, #results.feature-first .book:first-child > h3 { display:none; }
+    #results.list .book .info .list-title, #results.feature-first .book:first-child .info .list-title { display:block; margin-bottom:4px; }
+    #results.feature-first .book:first-child { width:100%; flex-wrap:nowrap; background:#fff8e6; }
+    @media (max-width:700px) { #results.grid .book, #results.grid3 .book { width:calc((100% - 10px) / 2); } }
+    @media (max-width:440px) { #results .book { width:100% !important; } }
+  </style>
+</head>
+<body>
+  <header>
+    <p>IT 4403 Lab 8 (Open Library Version): CSS Flexbox and Template</p>
+    <h1>Exercise 3: Switching Flexbox Layouts</h1>
+  </header>
+  <main>
+    <a class="button" href="../../lab-work.html">&larr; Back to Lab Work</a>
+    <p class="lead">Same search as Exercise 2, plus four buttons: switch to a flow list, switch back to the grid, show three items per row, and make the first item fill the whole first row.</p>
+    <form id="searchForm" class="toolbar">
+      <label for="searchTerm"><strong>Search books:</strong></label>
+      <input type="text" id="searchTerm" value="mobile web">
+      <button type="submit" id="button1">Search</button>
+    </form>
+    <div class="toolbar" role="group" aria-label="Layout buttons">
+      <strong>Layout:</strong>
+      <button type="button" id="btnList">Flow List</button>
+      <button type="button" id="btnGrid" class="active">Grid (4 per row)</button>
+      <button type="button" id="btnGrid3">Grid (3 per row)</button>
+      <button type="button" id="btnFirst" aria-pressed="false">First Item Full Row</button>
+    </div>
+    <div id="status" class="status" aria-live="polite"></div>
+    <div id="results" class="grid"></div>
+  </main>
+  <footer>Student website for IT 4403 Advanced Web and Mobile Applications, Kennesaw State University.</footer>
+  <script>
+    // ---- Shared settings ----
+    // Open Library search API: free, no API key needed.
+    // "fields" asks only for the data we use, which keeps the response small and fast.
+    const FIELDS = "key,title,subtitle,author_name,first_publish_year,cover_i,subject,publisher,number_of_pages_median,edition_count";
+    function booksUrl(term) {
+      return "https://openlibrary.org/search.json?limit=20&fields=" + FIELDS + "&q=" + encodeURIComponent(term);
+    }
+    function coverUrl(doc, size) {   // size: S, M, or L
+      return doc.cover_i ? "https://covers.openlibrary.org/b/id/" + doc.cover_i + "-" + size + ".jpg" : "";
+    }
+    function subjectText(doc, n) {  // Open Library search results have no description, so show subjects
+      return doc.subject ? "Subjects: " + doc.subject.slice(0, n).join(", ") : "No subjects listed.";
+    }
+    function showError() {
+      $("#status").addClass("error").text("The search failed. Check your internet connection and try again.");
+    }
+
+    function esc(s) { return $("<div>").text(s == null ? "" : String(s)).html(); }
+    function shorten(s, n) { s = s || "No description available."; return s.length > n ? s.slice(0, n) + "..." : s; }
+    function renderBooks(jsonData) {
+      $("#results").html("");
+      for (let i = 0; i < jsonData.docs.length; i++) {
+        const info = jsonData.docs[i];
+        let thumb = coverUrl(info, "M");
+        let bookdiv = "<div class='book'>";
+        bookdiv += "<h3>" + esc(info.title || "Untitled") + "</h3>";
+        bookdiv += thumb ? "<img src='" + esc(thumb) + "' alt='Cover of " + esc(info.title || "Untitled") + "'>"
+                         : "<div class='nocover'>No cover</div>";
+        bookdiv += "<div class='info'><h3 class='list-title'>" + esc(info.title || "Untitled") + "</h3>";
+        bookdiv += "<p class='authors'>" + esc((info.author_name || ["Unknown author"]).join(", ")) + (info.first_publish_year ? " (" + info.first_publish_year + ")" : "") + "</p>";
+        bookdiv += "<p class='desc'>" + esc(shorten(subjectText(info, 5), 140)) + "</p></div>";
+        bookdiv += "</div>";
+        $("#results").append(bookdiv);
+      }
+    }
+
+    $(function () {
+      // ---- Layout buttons (requirements a-d) ----
+      function setLayout(name, btn) {
+        $("#results").removeClass("grid grid3 list").addClass(name);
+        $("#btnList, #btnGrid, #btnGrid3").removeClass("active");
+        $(btn).addClass("active");
+      }
+      $("#btnList").click(function () { setLayout("list", this); });   // a) flow list
+      $("#btnGrid").click(function () { setLayout("grid", this); });   // b) back to grid
+      $("#btnGrid3").click(function () { setLayout("grid3", this); }); // c) 3 per row
+      $("#btnFirst").click(function () {                               // d) first item full row
+        $("#results").toggleClass("feature-first");
+        const on = $("#results").hasClass("feature-first");
+        $(this).toggleClass("active", on).attr("aria-pressed", on);
+      });
+
+      $("#searchForm").submit(function (e) {
+        e.preventDefault();
+        const term = $.trim($("#searchTerm").val());
+        if (!term) { $("#status").addClass("error").text("Please type a search term."); return; }
+        $("#status").removeClass("error").text("Searching ...");
+        $.getJSON(booksUrl(term))
+          .done(function (jsonData) {
+            if (!jsonData.docs || jsonData.docs.length === 0) {
+              $("#results").html(""); $("#status").text("No books found for \"" + term + "\"."); return;
+            }
+            $("#status").text(jsonData.docs.length + " of " + jsonData.numFound + " books shown for \"" + term + "\".");
+            renderBooks(jsonData);
+          })
+          .fail(showError);
+      });
+      $("#searchForm").submit(); // run the default search when the page opens
+    });
+  </script>
+</body>
+</html>
