@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 10 Task 4: Website Evaluation</title>
+  <link rel="stylesheet" href="lab10-site.css" />
+  <style>
+    .site-eval {
+      display: grid;
+      grid-template-columns: minmax(200px, 300px) 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    figure { margin: 0; }
+    figure img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      display: block;
+    }
+    figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+    .issue h3 { margin-top: 14px; }
+    .issue ul { margin: 4px 0 0; padding-left: 20px; }
+    .issue li { margin: 4px 0; }
+    .fix { background: #fff7e0; border-left: 4px solid var(--gold); padding: 10px 14px; margin-top: 14px; }
+    .fix ul { margin: 4px 0 0; padding-left: 20px; }
+
+    @media (max-width: 720px) {
+      .site-eval { grid-template-columns: 1fr; }
+      figure { max-width: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site">
+    <div class="inner">
+      <p class="kicker">Lab 10: Responsive Web Design</p>
+      <h1>Task 4: Website Evaluation on a Mobile Device</h1>
+      <div class="top-links">
+        <a class="btn" href="../../lab-work.html">&larr; Back to Lab Work</a>
+        <a class="btn" href="index.html">Lab 10 Index</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>How I tested</h2>
+      <p>I opened both sites on a phone-sized screen (iPhone 13: 390 × 844 CSS pixels) on November 15, 2026, and looked at <strong>layout</strong>, <strong>navigation</strong> and <strong>readability</strong>. I also checked the page code for a viewport tag, measured how wide each page is laid out, and recorded the text and link sizes.</p>
+      <p style="margin-bottom:0"><strong>The main finding:</strong> neither home page has a <code>&lt;meta name="viewport"&gt;</code> tag. Without it, the phone pretends to be a desktop about 980px wide, lays out the full desktop page, and shrinks it to about <strong>39–40%</strong> to fit the screen. Every other problem below follows from that.</p>
+    </section>
+
+    <!-- ===================== weather.gov ===================== -->
+    <section class="card">
+      <h2><a href="https://www.weather.gov" target="_blank" rel="noopener">weather.gov</a> (National Weather Service)</h2>
+      <div class="site-eval">
+        <figure>
+          <img src="images/weather-mobile.jpg" width="585" height="995" alt="weather.gov home page on a phone: the full desktop layout shrunk down, with a tiny menu, a small map and very small legend text" loading="lazy" />
+          <figcaption>Home page on a 390px-wide phone screen. The desktop layout is about 990px wide, shrunk to 39%.</figcaption>
+        </figure>
+        <div class="issue">
+          <h3>Layout issues</h3>
+          <ul>
+            <li>It's a fixed desktop layout: a left column (the location search and the green "Customize Your Weather.gov" box) next to the main column. It doesn't stack into one column on a phone.</li>
+            <li>The page is laid out about 990px wide, with one part (the state listings) 780px wide. You have to pinch to zoom and then scroll sideways.</li>
+            <li>The alerts map, the page's main content, is only about the width of the phone screen once shrunk. You have to zoom in to tell the warning colors apart.</li>
+          </ul>
+          <h3>Navigation problems</h3>
+          <ul>
+            <li>Two rows of horizontal menus (HOME, FORECAST, PAST WEATHER… and ACTIVE ALERTS, FORECAST MAPS, RADAR…) with no mobile "hamburger" menu.</li>
+            <li>The top menu opens drop-down lists (Local, Graphical, Aviation, Marine…). Those are built for a mouse hovering, so they're awkward with a finger.</li>
+            <li>The menu links are about 15px tall in the layout, so on screen they're only about 6px tall. That's far below the 24px minimum target size in the accessibility guidelines (WCAG 2.2), and the 44px that Apple recommends. 60 of the 64 visible links and buttons are smaller than 24px in at least one direction, even before shrinking.</li>
+          </ul>
+          <h3>Readability concerns</h3>
+          <ul>
+            <li>Most text is 10–13px, and shrinking it to 39% makes it about 4–5px on screen. The headline story and the map legend can't be read without zooming.</li>
+            <li>The legend uses small, underlined, colored links next to small color squares. These are hard to read and hard to tap.</li>
+            <li>Good: the design is clean, with high-contrast dark text on white. The location search ("City, St" or ZIP) is at the top, which is what most visitors want.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== cobb.com ===================== -->
+    <section class="card">
+      <h2><a href="https://cobb.com" target="_blank" rel="noopener">cobb.com</a> (Cobb County information portal)</h2>
+      <div class="site-eval">
+        <figure>
+          <img src="images/cobb-mobile.jpg" width="585" height="995" alt="cobb.com home page on a phone: a boxed desktop layout with several narrow columns of tiny text, ads and a small menu bar" loading="lazy" />
+          <figcaption>Home page on a 390px-wide phone screen. The desktop layout is 980px wide, shrunk to 40%.</figcaption>
+        </figure>
+        <div class="issue">
+          <h3>Layout issues</h3>
+          <ul>
+            <li>It's an older fixed-width design built with tables (9 tables on the home page). It has 3 columns at the top (Concert.com promo, welcome text, GoAuto ad) and 4 narrow columns below (County Information, Meet Singles Online, Recreation, Sports News).</li>
+            <li>On a phone, the columns stay side by side, so each one is only a sliver of the screen.</li>
+            <li>Ads and promos take up a large share of the space, and the main county information is pushed into a narrow column.</li>
+          </ul>
+          <h3>Navigation problems</h3>
+          <ul>
+            <li>The main menu (Home | Autos | Classifieds | Real Estate | Joint Venture) is 11px text in a 12px-tall bar. On screen that's about 4–5px, and the links sit close together, separated only by "|" characters. It's very easy to tap the wrong one.</li>
+            <li>There's no mobile menu, so the same small desktop bar is the only way to move around the site.</li>
+            <li>Large ad blocks such as "Looking for a new or used car?" look like navigation, which makes it hard to tell where the real site links are.</li>
+          </ul>
+          <h3>Readability concerns</h3>
+          <ul>
+            <li>Most of the text is 11–12px, with some at 9px, so it's about 4–5px on screen. It's unreadable without zooming, and once you zoom, you have to scroll sideways on every line.</li>
+            <li>Six long text blocks are fully justified, which creates uneven gaps between words in the narrow columns.</li>
+            <li>Many colors and fonts compete for attention: white and yellow on bright blue, red links on light green, and italic news summaries. The page is busy and hard to scan.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Fixes ===================== -->
+    <section class="card">
+      <h2>How the Lab 10 techniques would fix these sites</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Problem</th><th>Responsive fix (from this lab)</th></tr>
+          <tr><td>Page shrunk to about 40% on phones</td><td>Add <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code></td></tr>
+          <tr><td>Fixed 980–990px layout, sideways scrolling</td><td>A fluid grid: convert px widths to % (Task 2), and use <code>max-width: 100%</code> on images and the map</td></tr>
+          <tr><td>Side-by-side columns on a small screen</td><td>Media queries that stack the columns at about 640px (Task 3), with the main content first and ads below</td></tr>
+          <tr><td>Tiny horizontal menus and hover drop-downs</td><td>A menu that collapses behind a button below a breakpoint, with tap targets at least 44px tall</td></tr>
+          <tr><td>Text about 4–5px on screen</td><td>A 16px base font, line-height around 1.5, left-aligned instead of justified text in narrow columns</td></tr>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <p>IT 4403 Advanced Web and Mobile Applications · Lab 10 · Evaluation done November 15, 2026; the sites may change.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Flexible Grid (original fixed)</title>
+    
+    <style type="text/css">
+        
+        div
+        {
+            border: 2px solid blue;
+            margin: 2px;
+        }
+        
+        #container
+        {
+            width: 900px;
+            margin: auto;
+        }
+        
+        #sidebar
+        {
+            width: 200px;
+            float: left;
+        }
+        
+        #main
+        {
+            margin-left: 210px;
+        }
+    </style>
+
+    </head>
+    <body>
+        <!-- Lab page navigation (added; the exercise below is the original, unchanged) -->
+        <p style="background:#000;margin:0 0 10px;padding:10px;font-family:Arial,Helvetica,sans-serif">
+            <a href="../../lab-work.html" style="color:#000;background:#f5b335;font-weight:bold;text-decoration:none;padding:6px 12px;border-radius:3px">&larr; Back to Lab Work</a>
+            <a href="index.html" style="color:#000;background:#f5b335;font-weight:bold;text-decoration:none;padding:6px 12px;border-radius:3px">Lab 10 Index</a>
+            <a href="lab10a-fluid.html" style="color:#000;background:#f5b335;font-weight:bold;text-decoration:none;padding:6px 12px;border-radius:3px">View fluid version</a>
+            <span style="color:#f5b335;font-weight:bold;margin-left:8px">Original fixed-width page (before)</span>
+        </p>
+
+        <div id="container">
+            <div id="header">header</div>
+            <div id="sidebar">side<p>.</p></div>
+            <div id="main">main page content. 
+			<p>main page content. </p>
+			<p>main page content. </p>
+			</div>
+            <div id="footer">footer</div>
+        </div>
+        
+    </body>
+</html>

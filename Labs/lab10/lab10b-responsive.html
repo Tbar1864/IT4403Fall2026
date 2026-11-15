@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <!-- Step 1 of responsive design: use the device's real width -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Responsive Grid - Lab 10 Task 3</title>
+
+    <style type="text/css">
+
+        /* =================================================================
+           STEP 2: FLUID GRID  (target / context = result)
+           Original container = 1000px.  Original #main content area:
+           1000 - 220 (margin-left) - 5 (margin-right) - 2 (border)
+                - 20 (padding) = 753px, the context for .product.
+           ================================================================= */
+
+        *
+        {
+            box-sizing: border-box;
+        }
+
+        body
+        {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1rem;               /* 16px base for readability */
+            line-height: 1.5;
+            color: #222;
+        }
+
+        div
+        {
+            border: 1px solid blue;
+            margin: 0.5%;                  /* was 5px: 5 / 1000 */
+        }
+
+        #container
+        {
+            width: 95%;                    /* was 1000px */
+            max-width: 1200px;             /* stops lines getting too long on huge monitors */
+            margin: 10px auto;
+        }
+
+        #header
+        {
+            text-align: center;
+            background: #000;
+        }
+
+        #header img
+        {
+            max-width: 100%;               /* the banner shrinks with the screen */
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        #sidebar
+        {
+            width: 20%;                    /* was 200px: 200 / 1000 */
+            float: left;
+            padding: 10px;
+        }
+
+        #main
+        {
+            margin-left: 22%;              /* was 220px: 220 / 1000 */
+            padding: 1%;                   /* was 10px:  10 / 1000 */
+        }
+
+        .product
+        {
+            float: left;
+            width: 23.37%;                 /* was 176px: 176 / 753  -> 4 per row */
+            margin: 0.66%;                 /* was 5px:     5 / 753 */
+            min-height: 200px;             /* was height: 200px; min-height lets text grow */
+            padding: 10px;
+            border: 1px solid red;
+        }
+
+        .product h2
+        {
+            margin: 0 0 6px;
+            font-size: 1.1rem;
+        }
+
+        .product p
+        {
+            margin: 0;
+        }
+
+        .clear
+        {
+            clear: both;
+            border: 0;
+            margin: 0;
+        }
+
+        /* Layout label so you can see which media query is active */
+        #layout-label::after { content: "Desktop layout: 4 players per row"; }
+        #layout-label
+        {
+            display: block;
+            color: #f5b335;
+            font-weight: bold;
+            padding: 6px;
+        }
+
+        /* =================================================================
+           STEP 3: MEDIA QUERIES (breakpoints)
+           ================================================================= */
+
+        /* Tablet: 3 players per row, slightly wider sidebar */
+        @media screen and (max-width: 960px)
+        {
+            #sidebar     { width: 25%; }
+            #main        { margin-left: 27%; }
+            .product     { width: 31.3%; margin: 1%;  }
+            #layout-label::after { content: "Tablet layout: 3 players per row"; }
+        }
+
+        /* Mobile: sidebar moves above the content, 2 players per row */
+        @media screen and (max-width: 640px)
+        {
+            #container   { width: 100%; margin: 0; }
+            #sidebar     { float: none; width: auto; }
+            #main        { margin-left: 0.5%; padding: 2%; }
+            .product     { width: 47.9%; margin: 1%; min-height: 0; }
+            #layout-label::after { content: "Mobile layout: 2 players per row"; }
+        }
+
+        /* Small phones: one player per row, a little more breathing room */
+        @media screen and (max-width: 420px)
+        {
+            .product     { float: none; width: auto; margin: 0 0 10px; padding: 12px; }
+            .product h2  { font-size: 1.2rem; }
+            #layout-label::after { content: "Small phone layout: 1 player per row"; }
+        }
+
+        /* ---------- Lab page extras (not part of the exercise layout) ---------- */
+        .lab-bar
+        {
+            display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+            background: #000; padding: 10px 2.5%;
+        }
+        .lab-bar a
+        {
+            color: #000; background: #f5b335; font-weight: bold; text-decoration: none;
+            padding: 6px 12px; border-radius: 3px; font-size: 14px;
+        }
+        .lab-bar a:hover, .lab-bar a:focus { background: #fff; outline: none; }
+        .lab-bar span { color: #f5b335; font-weight: bold; margin-left: auto; font-size: 14px; }
+    </style>
+
+    </head>
+    <body>
+        <nav class="lab-bar" aria-label="Lab navigation">
+            <a href="../../lab-work.html">&larr; Back to Lab Work</a>
+            <a href="index.html">Lab 10 Index</a>
+            <a href="lab10b-fixed.html">View original (fixed)</a>
+            <span>Task 3: Full Responsive Design</span>
+        </nav>
+
+        <div id="container">
+            <div id="header">
+                <img src="https://ksuowls.com/common/controls/image_handler.aspx?thumb_id=0&amp;image_path=/images/2016/8/10/Header_42.png"
+                     width="930" height="300"
+                     alt="Kennesaw State Football Gameday Central" />
+                <span id="layout-label"></span>
+            </div>
+            <div id="sidebar">
+                <strong>Roster notes</strong>
+                <p>Some content on the side here. On phones this box moves above the players so it isn't squeezed into a narrow column.</p>
+            </div>
+            <div id="main">
+                <div class="product"><h2>Player 1</h2><p>A short introduction of player 1 here.</p></div>
+                <div class="product"><h2>Player 2</h2><p>Position, class year and hometown.</p></div>
+                <div class="product"><h2>Player 3</h2><p>Position, class year and hometown.</p></div>
+                <div class="product"><h2>Player 4</h2><p>Position, class year and hometown.</p></div>
+                <div class="product"><h2>Player 5</h2><p>Position, class year and hometown.</p></div>
+                <div class="product"><h2>Player 6</h2><p>Position, class year and hometown.</p></div>
+                <div class="product"><h2>Player 7</h2><p>Position, class year and hometown.</p></div>
+                <div class="product"><h2>Player 8</h2><p>Position, class year and hometown.</p></div>
+                <div class="clear"></div>
+            </div>
+        </div>
+
+    </body>
+</html>

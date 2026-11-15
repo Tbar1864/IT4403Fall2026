@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <!-- Needed so phones use their real width instead of pretending to be a desktop -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Flexible Grid (Fluid) - Lab 10 Task 2</title>
+
+    <style type="text/css">
+
+        /* Let width include padding and border, so percentages add up predictably */
+        *
+        {
+            box-sizing: border-box;
+        }
+
+        /* FLUID GRID FORMULA:  target / context = result
+           The original layout was 900px wide, so 900px is the "context"
+           for every width inside the container.                          */
+
+        div
+        {
+            border: 2px solid blue;        /* borders stay in px (a thin line) */
+            margin: 0.2222%;               /* was 2px:   2 / 900 = 0.2222%      */
+        }
+
+        #container
+        {
+            width: 90%;                    /* was 900px: now 90% of the window  */
+            margin: auto;
+        }
+
+        #sidebar
+        {
+            width: 22.2222%;               /* was 200px: 200 / 900 = 22.2222%   */
+            float: left;
+        }
+
+        #main
+        {
+            margin-left: 23.3333%;         /* was 210px: 210 / 900 = 23.3333%   */
+        }
+
+        #footer
+        {
+            clear: both;                   /* keeps the footer below the sidebar */
+        }
+
+        img
+        {
+            max-width: 100%;               /* any image shrinks with its column */
+            height: auto;
+        }
+
+        /* ---------- Lab page extras (not part of the exercise layout) ---------- */
+        .lab-bar
+        {
+            display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+            background: #000; padding: 10px 5%; margin-bottom: 14px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .lab-bar a
+        {
+            color: #000; background: #f5b335; font-weight: bold; text-decoration: none;
+            padding: 6px 12px; border-radius: 3px; font-size: 14px;
+        }
+        .lab-bar a:hover, .lab-bar a:focus { background: #fff; outline: none; }
+        .lab-bar span { color: #f5b335; font-weight: bold; margin-left: auto; font-size: 14px; }
+
+        .notes
+        {
+            width: 90%; margin: 18px auto; padding: 12px 16px;
+            font-family: Arial, Helvetica, sans-serif; line-height: 1.5;
+            background: #f4f8fb; border-left: 5px solid #4a90e2;
+        }
+        .notes table { border-collapse: collapse; margin: 8px 0; display: block; overflow-x: auto; max-width: 100%; }
+        .notes th, .notes td { border: 1px solid #c8d3df; padding: 4px 10px; text-align: left; }
+        .notes code { background: #e6edf5; padding: 0 4px; }
+    </style>
+
+    </head>
+    <body>
+        <nav class="lab-bar" aria-label="Lab navigation">
+            <a href="../../lab-work.html">&larr; Back to Lab Work</a>
+            <a href="index.html">Lab 10 Index</a>
+            <a href="lab10a-fixed.html">View original (fixed)</a>
+            <span>Task 2: Fluid Grid</span>
+        </nav>
+
+        <div id="container">
+            <div id="header">header</div>
+            <div id="sidebar">side<p>.</p></div>
+            <div id="main">main page content.
+			<p>main page content. </p>
+			<p>main page content. </p>
+			</div>
+            <div id="footer">footer</div>
+        </div>
+
+        <section class="notes">
+            <strong>Try it:</strong> resize the window. The container is now
+            <strong id="cw">-</strong> wide, and the sidebar and main area keep the same proportions.
+            In the original, the page stayed 900px wide and needed sideways scrolling on small screens.
+
+            <table>
+                <tr><th>Property</th><th>Fixed (before)</th><th>Fluid (after)</th><th>Math</th></tr>
+                <tr><td><code>#container</code> width</td><td>900px</td><td>90%</td><td>a share of the window</td></tr>
+                <tr><td><code>#sidebar</code> width</td><td>200px</td><td>22.2222%</td><td>200 ÷ 900</td></tr>
+                <tr><td><code>#main</code> margin-left</td><td>210px</td><td>23.3333%</td><td>210 ÷ 900</td></tr>
+                <tr><td><code>div</code> margin</td><td>2px</td><td>0.2222%</td><td>2 ÷ 900</td></tr>
+            </table>
+            A fluid grid alone isn't enough on a phone: at 320px wide the sidebar is only about 64px.
+            That's why Task 3 adds media queries.
+        </section>
+
+        <script>
+            function showWidth() {
+                document.getElementById("cw").textContent =
+                    Math.round(document.getElementById("container").getBoundingClientRect().width) + "px";
+            }
+            window.addEventListener("resize", showWidth);
+            showWidth();
+        </script>
+    </body>
+</html>

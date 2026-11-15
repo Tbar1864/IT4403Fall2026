@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Without this tag, phones pretend to be about 980px wide and media queries never fire -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 10 Task 1: Media Queries</title>
+  <link rel="stylesheet" href="lab10-site.css" />
+
+  <style>
+    /* ---------- Page layout for the four test cards ---------- */
+    .readout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 12px 0 4px;
+    }
+    .readout div {
+      background: #111;
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 4px;
+    }
+    .readout span { display: block; color: var(--gold); font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+    .readout strong { font-size: 1.2rem; }
+
+    .tests {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+      gap: 18px;
+    }
+
+    .test {
+      background: #fff;
+      border: 3px solid #c7ccd3;
+      border-radius: 6px;
+      padding: 16px 18px;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .test h3 { margin-top: 0; }
+    .test pre { font-size: 0.85rem; }
+
+    /* The status badge: shows "Not active" unless a media query below turns it on */
+    .status {
+      display: inline-block;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: #e3e6ea;
+      color: #444;
+    }
+    .status::before { content: "Not active"; }
+
+    /* =====================================================================
+       TASK 1: THE FOUR MEDIA QUERIES
+       Each query only changes its own card, so you can see exactly
+       which rules are active at the current screen size.
+       ===================================================================== */
+
+    /* a) Screen width between 400px and 600px (both ends included) */
+    @media screen and (min-width: 400px) and (max-width: 600px) {
+      #test-a { background: #fff7e0; border-color: var(--gold); }
+      #test-a .status { background: var(--gold); color: #000; }
+      #test-a .status::before { content: "ACTIVE"; }
+    }
+
+    /* b) Portrait orientation AND width less than 640px */
+    @media (orientation: portrait) and (max-width: 639px) {
+      #test-b { background: #e6f4ea; border-color: #1e8e3e; }
+      #test-b .status { background: #1e8e3e; color: #fff; }
+      #test-b .status::before { content: "ACTIVE"; }
+    }
+
+    /* c) Aspect ratio narrower than 16:9 AND width between 480px and 960px */
+    @media (max-aspect-ratio: 16/9) and (min-width: 480px) and (max-width: 960px) {
+      #test-c { background: #e8f0fe; border-color: #1a73e8; }
+      #test-c .status { background: #1a73e8; color: #fff; }
+      #test-c .status::before { content: "ACTIVE"; }
+    }
+
+    /* d) The same styles for print AND for screens narrower than 480px.
+          The comma means OR: either condition turns these styles on. */
+    @media print, screen and (max-width: 479px) {
+      #test-d { background: #fce8e6; border-color: #c5221f; }
+      #test-d .status { background: #c5221f; color: #fff; }
+      #test-d .status::before { content: "ACTIVE"; }
+    }
+
+    /* Extra print clean-up so the print preview is easy to read */
+    @media print {
+      .top-links, .readout, .how-to { display: none; }
+      header.site { background: #fff; color: #000; border-bottom: 2px solid #000; }
+      .test { break-inside: avoid; }
+      pre { background: #fff; color: #000; border: 1px solid #999; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site">
+    <div class="inner">
+      <p class="kicker">Lab 10: Responsive Web Design</p>
+      <h1>Task 1: Media Queries</h1>
+      <div class="top-links">
+        <a class="btn" href="../../lab-work.html">&larr; Back to Lab Work</a>
+        <a class="btn" href="index.html">Lab 10 Index</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>What is happening right now</h2>
+      <p class="lead">These numbers update as you resize the window or rotate your phone. The cards below change color using only CSS media queries, with no JavaScript, so you can see which rules the browser is applying.</p>
+      <div class="readout" aria-live="polite">
+        <div><span>Width</span><strong id="w">-</strong></div>
+        <div><span>Height</span><strong id="h">-</strong></div>
+        <div><span>Orientation</span><strong id="o">-</strong></div>
+        <div><span>Aspect ratio</span><strong id="ar">-</strong></div>
+      </div>
+      <p id="ar-note" style="margin-bottom:0;color:var(--muted)"></p>
+    </section>
+
+    <div class="tests">
+      <article class="test" id="test-a">
+        <h3>a) Width between 400px and 600px</h3>
+        <p class="status" role="status"></p>
+<pre>@media screen and (min-width: 400px)
+              and (max-width: 600px) {
+  /* styles */
+}</pre>
+        <p><strong>Test it:</strong> drag the window between 400 and 600 pixels wide.</p>
+      </article>
+
+      <article class="test" id="test-b">
+        <h3>b) Portrait and width &lt; 640px</h3>
+        <p class="status" role="status"></p>
+<pre>@media (orientation: portrait)
+   and (max-width: 639px) {
+  /* styles */
+}</pre>
+        <p><strong>Test it:</strong> on a phone, hold it upright. In a browser, make the window narrower than 640px and taller than it is wide.</p>
+      </article>
+
+      <article class="test" id="test-c">
+        <h3>c) Narrower than 16:9 and width 480px–960px</h3>
+        <p class="status" role="status"></p>
+<pre>@media (max-aspect-ratio: 16/9)
+   and (min-width: 480px)
+   and (max-width: 960px) {
+  /* styles */
+}</pre>
+        <p><strong>Test it:</strong> a tablet, or a window 480–960px wide that isn't a very wide, short strip.</p>
+      </article>
+
+      <article class="test" id="test-d">
+        <h3>d) Print, or screen width &lt; 480px</h3>
+        <p class="status" role="status"></p>
+<pre>@media print,
+       screen and (max-width: 479px) {
+  /* the same styles for both */
+}</pre>
+        <p><strong>Test it:</strong> make the window narrower than 480px, or open Print Preview (Ctrl+P / Cmd+P). This card turns red in both cases.</p>
+      </article>
+    </div>
+
+    <section class="card how-to" style="margin-top:24px">
+      <h2>How to read these queries</h2>
+      <ul>
+        <li><code>and</code> means every condition must be true. A comma (<code>,</code>) works like <strong>or</strong>, which is why query d covers both print and small screens with one set of styles.</li>
+        <li><code>min-width</code> means "this wide or wider" and <code>max-width</code> means "this wide or narrower." Both include the number itself, so "less than 640px" is written <code>max-width: 639px</code>, and "less than 480px" is <code>max-width: 479px</code>.</li>
+        <li><code>orientation: portrait</code> is true when the viewport is taller than it is wide (or square).</li>
+        <li><code>aspect-ratio</code> is width ÷ height. 16:9 is about 1.78. "Narrower than 16:9" means a smaller ratio, so it uses <code>max-aspect-ratio: 16/9</code>. A typical 1920×1080 monitor window is wider than that, while a tablet, a phone or a tall window is narrower.</li>
+        <li>Newer browsers also accept range syntax, which reads more naturally: <code>@media (400px &lt;= width &lt;= 600px)</code>, <code>(width &lt; 640px)</code> and <code>(aspect-ratio &lt; 16/9)</code>.</li>
+      </ul>
+
+      <h2>Testing in Chrome or Edge</h2>
+      <ol>
+        <li>Press <strong>F12</strong> to open DevTools, then click the <strong>device toolbar</strong> icon (or press Ctrl+Shift+M).</li>
+        <li>Pick a device like iPhone 12 Pro or iPad, or choose <strong>Responsive</strong> and type an exact width and height.</li>
+        <li>Use the <strong>rotate</strong> button to switch between portrait and landscape and watch card b.</li>
+        <li>For card d, press <strong>Ctrl+P</strong> and look at the print preview.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site">
+    <p>IT 4403 Advanced Web and Mobile Applications · Lab 10</p>
+  </footer>
+
+  <script>
+    // Live readout only. The card colors come from the CSS media queries above.
+    function update() {
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      var ratio = w / h;
+      document.getElementById("w").textContent = w + "px";
+      document.getElementById("h").textContent = h + "px";
+      document.getElementById("o").textContent = (h >= w) ? "Portrait" : "Landscape";
+      document.getElementById("ar").textContent = ratio.toFixed(2) + " : 1";
+      document.getElementById("ar-note").textContent =
+        "16:9 is 1.78 : 1, so this window is " +
+        (ratio <= 16 / 9 ? "narrower than (or equal to) 16:9." : "wider than 16:9.");
+    }
+    window.addEventListener("resize", update);
+    update();
+  </script>
+</body>
+</html>
