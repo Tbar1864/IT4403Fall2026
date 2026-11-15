@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Load more data 1: paging with Mustache - Open Library</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- Lab 9 Task 1: Mustache template engine (jsDelivr browser build) -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js"></script>
+
+    <!-- =====================================================================
+         UI (VIEW) LAYER: Mustache templates
+         All of the HTML markup lives here, not inside the JavaScript.
+         {{ }} tags are filled in from the data object; Mustache also
+         HTML-escapes every value automatically, so escapeHtml() is no
+         longer needed.
+         ===================================================================== -->
+
+    <!-- Template for the page links -->
+    <script id="pagesTemplate" type="text/template">
+        Pages:
+        {{#pages}}
+            <a class="page{{#active}} active{{/active}}" href="#" data-page="{{number}}">{{number}}</a>
+        {{/pages}}
+    </script>
+
+    <!-- Template for the list of search results -->
+    <script id="booksTemplate" type="text/template">
+        <p>Page {{page}}</p>
+        {{#books}}
+            <img class="bookicon"
+                 src="{{cover}}"
+                 width="80"
+                 alt="{{title}}"
+                 title="{{title}}"
+                 data-index="{{index}}" />
+        {{/books}}
+        {{^books}}
+            <p>No results found.</p>
+        {{/books}}
+    </script>
+
+    <!-- Template for the selected book's details -->
+    <script id="bookTemplate" type="text/template">
+        <h2>{{title}}</h2>
+        <p><strong>Author:</strong> {{author}}</p>
+        <p><strong>First Published:</strong> {{year}}</p>
+    </script>
+
+    <!-- Template for status messages (searching, errors, empty input) -->
+    <script id="messageTemplate" type="text/template">
+        <p>{{message}}</p>
+    </script>
+
+    <script type="text/javascript">
+    // =====================================================================
+    // DATA / LOGIC LAYER
+    // The JavaScript below only gets data and builds plain objects.
+    // It never builds HTML strings; it hands the data to a template.
+    // =====================================================================
+
+    var currentBooks = [];   // data model for the page that is showing
+    var TOTAL_PAGES = 5;
+
+    $(document).ready(function ()
+    {
+        // search event and actions
+        $("#button1").click(function ()
+        {
+            var term = $("#searchTerm").val().trim();
+            if (term === "")
+            {
+                showMessage("#books", "Please enter a search term.");
+                $("#book").html("");
+                $("#pages").html("");
+                return;
+            }
+
+            searchBooks(term, 1);
+        });
+
+        // add click events to pages so additional ajax can be triggered
+        $("#pages").on("click", ".page", function (event)
+        {
+            event.preventDefault();
+            var page = parseInt($(this).attr("data-page"), 10);
+            var term = $("#searchTerm").val().trim();
+            searchBooks(term, page);
+        });
+
+        // click a cover to see its details (delegated, so it works after re-rendering)
+        $("#books").on("click", ".bookicon", function ()
+        {
+            var index = parseInt($(this).attr("data-index"), 10);
+            getBookDetails(currentBooks[index]);
+        });
+    });
+
+    // Turn one Open Library record into a simple view-model object
+    function toBookModel(book, index)
+    {
+        return {
+            index: index,
+            title: book.title || "No title",
+            author: (book.author_name && book.author_name.length > 0)
+                ? book.author_name[0]
+                : "Unknown author",
+            year: book.first_publish_year || "N/A",
+            cover: book.cover_i
+                ? "https://covers.openlibrary.org/b/id/" + book.cover_i + "-M.jpg"
+                : "https://placehold.co/80x120?text=No+Image"
+        };
+    }
+
+    function renderPages(activePage)
+    {
+        var pages = [];
+        for (var i = 1; i <= TOTAL_PAGES; i++)
+        {
+            pages.push({ number: i, active: i === activePage });
+        }
+        render("#pages", "#pagesTemplate", { pages: pages });
+    }
+
+    function searchBooks(term, page)
+    {
+        showMessage("#books", "Searching...");
+        $("#book").html("");
+        renderPages(page);
+
+        var servicePoint = "https://openlibrary.org/search.json?q=" +
+                           encodeURIComponent(term) +
+                           "&limit=10&page=" + page;
+
+        $.ajax({
+            url: servicePoint,
+            method: "GET",
+            dataType: "json",
+            success: function (jsonData)
+            {
+                var docs = (jsonData.docs || []).slice(0, 10);
+                currentBooks = $.map(docs, toBookModel);
+
+                render("#books", "#booksTemplate", {
+                    page: page,
+                    books: currentBooks
+                });
+            },
+            error: function ()
+            {
+                showMessage("#books", "Error loading data.");
+            }
+        });
+    }
+
+    function getBookDetails(book)
+    {
+        if (!book) { return; }
+        render("#book", "#bookTemplate", book);
+    }
+
+    function showMessage(target, message)
+    {
+        render(target, "#messageTemplate", { message: message });
+    }
+
+    // One helper connects data to a template and puts the result on the page
+    function render(target, templateId, data)
+    {
+        var template = $(templateId).html();
+        $(target).html(Mustache.render(template, data));
+    }
+    </script>
+
+    <style>
+        .bookicon {
+            vertical-align: top;
+            margin: 1px;
+        }
+
+        .bookicon:hover {
+            width: 100px;
+            cursor: pointer;
+            margin: 0 -10px 0 -10px;
+            border: 1px solid blue;
+            z-index: 9999;
+            position: relative;
+        }
+
+        .page {
+            border: thin solid blue;
+            padding: 10px;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        .page.active {
+            background-color: blue;
+            color: white;
+        }
+
+        .description-box {
+            margin: 10px 0 15px 0;
+            padding: 10px 12px;
+            background-color: #f4f8fb;
+            border-left: 5px solid #4a90e2;
+            font-family: Arial, sans-serif;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Lab 9 site navigation -->
+<style>
+  .lab-topbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:#000;padding:10px 14px;margin:0 0 12px 0;font-family:Arial,Helvetica,sans-serif}
+  .lab-topbar a{color:#000;background:#f5b335;font-weight:bold;text-decoration:none;padding:6px 12px;border-radius:4px;font-size:14px}
+  .lab-topbar a:hover,.lab-topbar a:focus{background:#fff;outline:none}
+  .lab-topbar span{color:#f5b335;font-weight:bold;margin-left:auto;font-size:14px}
+</style>
+<nav class="lab-topbar" aria-label="Lab navigation">
+  <a href="../../lab-work.html">&larr; Back to Lab Work</a>
+  <a href="index.html">Lab 9 Index</a>
+  <span>Lab 9: Data Interaction Enhancements</span>
+</nav>
+
+<div class="description-box">
+    <strong>About this demo:</strong> This page demonstrates pagination where users can move through multiple result pages by clicking page numbers.
+    <br><strong>Lab 9 Task 1:</strong> The search results, page links and book details are now rendered with Mustache templates instead of HTML strings built in JavaScript, so the UI (templates) and the data (JavaScript objects) are kept separate.
+</div>
+
+<h1>Load more data through pagination</h1>
+<input type="text" id="searchTerm" value="mobile web" />
+<input type="button" id="button1" value="Search" />
+<span id="pages"></span>
+
+<h4>Search Results</h4>
+<div id="books"></div>
+
+<h4>Selected Book</h4>
+<div id="book" style="width: 800px; max-height: 100px"></div>
+</body>
+</html>

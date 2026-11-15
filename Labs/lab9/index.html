@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lab 9: Data Interaction Enhancements</title>
+
+    <style>
+        :root { --black:#000; --gold:#f5b335; --bg:#f4f5f7; --text:#202124; --muted:#5f6368; }
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background: var(--black);
+            color: var(--gold);
+            padding: 18px 24px;
+        }
+
+        header h1 { margin: 0; font-size: 26px; }
+        header p  { margin: 4px 0 0; color: #fff; }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 12px;
+            background: var(--gold);
+            color: var(--black);
+            font-weight: bold;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+        }
+        .back-btn:hover, .back-btn:focus { background: #fff; outline: none; }
+
+        main { max-width: 980px; margin: 0 auto; padding: 20px 24px 40px; }
+
+        section {
+            background: #fff;
+            border-top: 4px solid var(--gold);
+            border-radius: 6px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.08);
+        }
+
+        h2 { margin: 0 0 8px; font-size: 20px; color: var(--black); }
+
+        ul { list-style-type: none; padding: 0; margin: 0; }
+        li { margin-bottom: 12px; }
+
+        a.demo {
+            font-weight: bold;
+            color: #1a5fb4;
+            text-decoration: none;
+        }
+        a.demo:hover { text-decoration: underline; }
+
+        .description { display: block; color: #444; }
+
+        .tag {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: bold;
+            background: var(--black);
+            color: var(--gold);
+            padding: 1px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .task-list li { padding-left: 2px; }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Lab 9: Data Interaction Enhancements</h1>
+    <p>Data Interaction &amp; UI Patterns, using the Open Library search API</p>
+    <a class="back-btn" href="../../lab-work.html">&larr; Back to Lab Work</a>
+</header>
+
+<main>
+
+<!-- Lab 9 tasks -->
+<section aria-labelledby="tasks-heading">
+    <h2 id="tasks-heading">Lab 9 Tasks</h2>
+    <ul class="task-list">
+        <li>
+            <a class="demo" href="load-more-1-paging-updated.html">Task 1: Pagination with a Mustache Template</a>
+            <span class="tag">Updated</span>
+            <span class="description">Search results, page links and book details are rendered with Mustache templates instead of HTML strings built in JavaScript, keeping the UI and the data separate.</span>
+        </li>
+        <li>
+            <a class="demo" href="load-more-3-scroll-updated.html">Task 2: Horizontal Slideshow</a>
+            <span class="tag">Updated</span>
+            <span class="description">Changed from vertical infinite scrolling to a horizontal slideshow. Pages of results slide left and right, and paging is shown as (current page / total pages), for example (3 / 4).</span>
+        </li>
+    </ul>
+</section>
+
+<!-- UI Patterns -->
+<section aria-labelledby="ui-heading">
+    <h2 id="ui-heading">UI Patterns (Details-on-Demand)</h2>
+    <ul>
+        <li>
+            <a class="demo" href="1a.two-column-updated.html">Two Column Layout</a>
+            <span class="description">Displays search results and selected item details side-by-side in two columns.</span>
+        </li>
+        <li>
+            <a class="demo" href="1b.split-screen-updated.html">Split Screen Layout</a>
+            <span class="description">Shows results and details in two independently scrollable panels.</span>
+        </li>
+        <li>
+            <a class="demo" href="1c.sticky-side-panel-updated.html">Sticky Side Panel</a>
+            <span class="description">Keeps the details panel fixed while the results list scrolls.</span>
+        </li>
+        <li>
+            <a class="demo" href="2.modal-overlay-updated.html">Modal Overlay</a>
+            <span class="description">Opens selected item details in a popup overlay above the main content.</span>
+        </li>
+        <li>
+            <a class="demo" href="3.inline-expansion-updated.html">Inline Expansion</a>
+            <span class="description">Expands and shows details directly below the selected item in the list.</span>
+        </li>
+    </ul>
+</section>
+
+<!-- Data Interaction Patterns -->
+<section aria-labelledby="data-heading">
+    <h2 id="data-heading">Data Interaction Patterns (Loading Data)</h2>
+    <ul>
+        <li>
+            <a class="demo" href="load-more-1-paging-updated.html">Pagination (Mustache)</a>
+            <span class="tag">Task 1</span>
+            <span class="description">Loads results by navigating through numbered pages, rendered with Mustache templates.</span>
+        </li>
+        <li>
+            <a class="demo" href="load-more-2-button-updated.html">Load More Button</a>
+            <span class="description">Appends additional results when the user clicks the Load More button.</span>
+        </li>
+        <li>
+            <a class="demo" href="load-more-3-scroll-updated.html">Horizontal Slideshow</a>
+            <span class="tag">Task 2</span>
+            <span class="description">Browses result pages left and right like a slideshow, with (current / total) paging.</span>
+        </li>
+        <li>
+            <a class="demo" href="load-more-4-slide-vertical.html">Vertical Slideshow</a>
+            <span class="description">Displays result sets as pages that can be browsed vertically like a slideshow.</span>
+        </li>
+    </ul>
+</section>
+
+</main>
+</body>
+</html>

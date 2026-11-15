@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Split Screen - Open Library</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+
+    <script id="booklisttemplate" type="text/template">
+        {{#books}}
+        <div class="booklistitem" data-key="{{key}}">
+            <img src="{{coverSmall}}" width="50" height="75" />
+            {{title}}
+        </div>
+        {{/books}}
+    </script>
+
+    <script id="bookdetailstemplate" type="text/template">
+        <h2>{{title}}</h2>
+        <img src="{{coverLarge}}" style="float:left; margin-right:15px;" />
+        <div style="margin-left: 220px;">
+            <p><strong>Author:</strong> {{author}}</p>
+            <p><strong>First Published:</strong> {{year}}</p>
+            <h4>Description</h4>
+            <div>{{description}}</div>
+            <p><a href="{{link}}" target="_blank">More Information on Open Library</a></p>
+        </div>
+        <div style="clear:both;"></div>
+    </script>
+
+    <script>
+    let currentBooks = [];
+
+    $(document).ready(function () {
+        $("#btnSearch").click(function () {
+            const term = $("#searchTerm").val().trim();
+
+            if (term === "") {
+                $("#booklist").html("<p>Please enter a search term.</p>");
+                $("#bookdetails").html("");
+                return;
+            }
+
+            searchBooks(term);
+        });
+    });
+
+    function normalizeBooks(docs, max) {
+        return docs.slice(0, max).map(function (book) {
+            return {
+                key: book.key || "",
+                title: book.title || "No title",
+                author: (book.author_name && book.author_name.length > 0)
+                    ? book.author_name[0]
+                    : "Unknown author",
+                year: book.first_publish_year || "N/A",
+                description: "Description not available in search results.",
+                coverSmall: book.cover_i
+                    ? "https://covers.openlibrary.org/b/id/" + book.cover_i + "-S.jpg"
+                    : "https://placehold.co/50x75?text=No+Image",
+                coverLarge: book.cover_i
+                    ? "https://covers.openlibrary.org/b/id/" + book.cover_i + "-M.jpg"
+                    : "https://placehold.co/180x260?text=No+Image",
+                link: book.key
+                    ? "https://openlibrary.org" + book.key
+                    : "https://openlibrary.org"
+            };
+        });
+    }
+
+    function searchBooks(term) {
+        $("#booklist").html("<p>Searching...</p>");
+        $("#bookdetails").html("");
+
+        const serviceUrl = "https://openlibrary.org/search.json?q=" + encodeURIComponent(term);
+
+        $.ajax({
+            url: serviceUrl,
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                currentBooks = normalizeBooks(data.docs || [], 12);
+
+                if (currentBooks.length === 0) {
+                    $("#booklist").html("<p>No results found.</p>");
+                    return;
+                }
+
+                const template = $("#booklisttemplate").html();
+                const html = Mustache.render(template, { books: currentBooks });
+                $("#booklist").html(html);
+
+                $(".booklistitem").on("click", function () {
+                    const bookKey = $(this).attr("data-key");
+                    getBookDetails(bookKey);
+                });
+            },
+            error: function () {
+                $("#booklist").html("<p>Error loading data.</p>");
+            }
+        });
+    }
+
+    function getBookDetails(bookKey) {
+        const selectedBook = currentBooks.find(function (book) {
+            return book.key === bookKey;
+        });
+
+        if (selectedBook) {
+            const template = $("#bookdetailstemplate").html();
+            const html = Mustache.render(template, selectedBook);
+            $("#bookdetails").html(html);
+        }
+    }
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        #header {
+            background-color: #66ddee;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        #booklist {
+            overflow: auto;
+            position: absolute;
+            top: 220px;
+            bottom: 10px;
+            left: 10px;
+            width: 44%;
+        }
+
+        #bookdetails {
+            overflow: auto;
+            position: absolute;
+            top: 220px;
+            bottom: 10px;
+            left: 47%;
+            width: 50%;
+            padding-right: 10px;
+        }
+
+        .booklistitem {
+            border: thin solid gray;
+            cursor: pointer;
+            margin: 1px;
+            padding: 6px;
+            background: white;
+        }
+
+        .booklistitem:hover {
+            background-color: yellow;
+        }
+
+        .description-box {
+            margin: 10px 0 15px 0;
+            padding: 10px 12px;
+            background-color: #f4f8fb;
+            border-left: 5px solid #4a90e2;
+            line-height: 1.4;
+        }
+
+        input[type="text"], input[type="button"] {
+            padding: 6px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Lab 9 site navigation -->
+<style>
+  .lab-topbar{position:fixed;right:16px;bottom:16px;z-index:10000;display:flex;gap:8px;align-items:center;background:#000;padding:8px 10px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:Arial,Helvetica,sans-serif}
+  .lab-topbar a{color:#000;background:#f5b335;font-weight:bold;text-decoration:none;padding:6px 12px;border-radius:4px;font-size:14px}
+  .lab-topbar a:hover,.lab-topbar a:focus{background:#fff;outline:none}
+  .lab-topbar span{color:#f5b335;font-weight:bold;margin-left:auto;font-size:14px}
+</style>
+<nav class="lab-topbar" aria-label="Lab navigation">
+  <a href="../../lab-work.html">&larr; Back to Lab Work</a>
+  <a href="index.html">Lab 9 Index</a>
+</nav>
+
+<div id="header">
+    <div class="description-box">
+        <strong>About this demo:</strong> This page demonstrates a split-screen layout where the book list and the selected book details are shown in two independently scrollable panels.
+    </div>
+
+    <h1>Book Search</h1>
+    <input type="text" id="searchTerm" value="mobile web" />
+    <input type="button" id="btnSearch" value="Search" />
+</div>
+
+<div id="booklist"></div>
+<div id="bookdetails"></div>
+
+</body>
+</html>

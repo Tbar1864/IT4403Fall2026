@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Load more data 4: slideshow/carousel - Open Library</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function ()
+    {
+        var totalResultsPages = 0;
+        var currentPage = 1;
+        var pageHeight = 129;
+
+        $("#btnSearch").click(function ()
+        {
+            var term = $("#searchTerm").val().trim();
+
+            if (term === "")
+            {
+                $("#results").html("<p>Please enter a search term.</p>");
+                return;
+            }
+
+            $("#results").html("");
+            totalResultsPages = 1;
+            currentPage = 1;
+            loadBooks(totalResultsPages);
+        });
+
+        $("#btnMore").click(function ()
+        {
+            totalResultsPages++;
+            currentPage = totalResultsPages;
+            loadBooks(totalResultsPages, function ()
+            {
+                var newMargin = "-" + ((totalResultsPages - 1) * pageHeight) + "px";
+                $("#results").animate({ marginTop: newMargin });
+                $("#totalpages").html(currentPage + "/" + totalResultsPages);
+            });
+        });
+
+        function loadBooks(page, callback)
+        {
+            var term = $("#searchTerm").val().trim();
+
+            var url = "https://openlibrary.org/search.json?q=" +
+                      encodeURIComponent(term) +
+                      "&page=" + page;
+
+            $.ajax({
+                url: url,
+                method: "GET",
+                dataType: "json",
+                success: function (jsonData)
+                {
+                    var docs = (jsonData.docs || []).slice(0, 10);
+
+                    if (docs.length === 0)
+                    {
+                        if (page === 1)
+                        {
+                            $("#results").html("<p>No results found.</p>");
+                        }
+                        $("#totalpages").html(currentPage + "/" + totalResultsPages);
+                        return;
+                    }
+
+                    for (var i = 0; i < docs.length; i++)
+                    {
+                        var thumbnail = docs[i].cover_i
+                            ? "https://covers.openlibrary.org/b/id/" + docs[i].cover_i + "-M.jpg"
+                            : "https://placehold.co/100x120?text=No+Image";
+
+                        var bookdiv = "<div class='book'>";
+                        bookdiv += "<img src='" + thumbnail + "' width='100' height='120' />";
+                        bookdiv += "</div>";
+
+                        $("#results").append(bookdiv);
+                    }
+
+                    $("#totalpages").html(currentPage + "/" + totalResultsPages);
+
+                    if (callback)
+                    {
+                        callback();
+                    }
+                },
+                error: function ()
+                {
+                    $("#results").append("<p>Error loading data.</p>");
+                }
+            });
+        }
+
+        $("#btnPre").click(function ()
+        {
+            if (currentPage > 1)
+            {
+                $("#results").animate({ marginTop: "+=" + pageHeight + "px" });
+                currentPage--;
+                $("#totalpages").html(currentPage + "/" + totalResultsPages);
+            }
+        });
+
+        $("#btnNext").click(function ()
+        {
+            if (currentPage < totalResultsPages)
+            {
+                $("#results").animate({ marginTop: "-=" + pageHeight + "px" });
+                currentPage++;
+                $("#totalpages").html(currentPage + "/" + totalResultsPages);
+            }
+        });
+    });
+    </script>
+
+    <style>
+        #results
+        {
+            display: flex;
+            flex-wrap: wrap;
+            width: 1100px;
+            margin: 0;
+        }
+
+        .book
+        {
+            border: thin solid blue;
+            margin: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .description-box
+        {
+            margin: 10px 0 15px 0;
+            padding: 10px 12px;
+            background-color: #f4f8fb;
+            border-left: 5px solid #4a90e2;
+            font-family: Arial, sans-serif;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Lab 9 site navigation -->
+<style>
+  .lab-topbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:#000;padding:10px 14px;margin:0 0 12px 0;font-family:Arial,Helvetica,sans-serif}
+  .lab-topbar a{color:#000;background:#f5b335;font-weight:bold;text-decoration:none;padding:6px 12px;border-radius:4px;font-size:14px}
+  .lab-topbar a:hover,.lab-topbar a:focus{background:#fff;outline:none}
+  .lab-topbar span{color:#f5b335;font-weight:bold;margin-left:auto;font-size:14px}
+</style>
+<nav class="lab-topbar" aria-label="Lab navigation">
+  <a href="../../lab-work.html">&larr; Back to Lab Work</a>
+  <a href="index.html">Lab 9 Index</a>
+  <span>Lab 9: Data Interaction Enhancements</span>
+</nav>
+
+<div class="description-box"><strong>About this demo:</strong> This page demonstrates a slideshow-style result viewer where additional result sets are loaded and browsed like pages in a vertical carousel.</div>
+
+    <h1>Display more items with slideshow/carousel (vertical)</h1>
+    <input type="text" id="searchTerm" value="web" />
+    <input type="button" id="btnSearch" value="Search" />
+    <input type="button" id="btnMore" value="Load More" />
+
+    <div style="width:1100px; height:150px; overflow:hidden; border:thin red solid">
+        <div id="results"></div>
+    </div>
+
+    <input type="button" id="btnPre" value="< Move Prev" />
+    <span id="totalpages"></span>
+    <input type="button" id="btnNext" value="Move Next >" />
+</body>
+</html>
