@@ -1,77 +1,144 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lab 10: Responsive Web Design</title>
-  <link rel="stylesheet" href="lab10-site.css" />
-  <style>
-    .tasks { list-style: none; padding: 0; margin: 0; }
-    .tasks li { margin: 0 0 16px; }
-    .tasks .desc { display: block; color: #444; }
-    .pair a { margin-right: 14px; }
-    .concepts dt { font-weight: bold; margin-top: 10px; }
-    .concepts dd { margin: 2px 0 0 0; }
-  </style>
-</head>
-<body>
-  <header class="site">
-    <div class="inner">
-      <p class="kicker">IT 4403 Advanced Web and Mobile Applications</p>
-      <h1>Lab 10: Responsive Web Design</h1>
-      <div class="top-links">
-        <a class="btn" href="../../lab-work.html">&larr; Back to Lab Work</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 10: Responsive Web Design</title>
+    <link rel="stylesheet" href="lab10-site.css" />
+    <style>
+      .tasks {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .tasks li {
+        margin: 0 0 16px;
+      }
+      .tasks .desc {
+        display: block;
+        color: #444;
+      }
+      .pair a {
+        margin-right: 14px;
+      }
+      .concepts dt {
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .concepts dd {
+        margin: 2px 0 0 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site">
+      <div class="inner">
+        <p class="kicker">IT 4403 Advanced Web and Mobile Applications</p>
+        <h1>Lab 10: Responsive Web Design</h1>
+        <div class="top-links">
+          <a class="btn" href="../../lab-work.html">&larr; Back to Lab Work</a>
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main>
-    <section class="card">
-      <h2>Objective</h2>
-      <p class="lead" style="margin-bottom:0">Hands-on practice with responsive web design: media queries, fluid grid layouts, and evaluating real websites on a mobile device. (Practice lab, no submission required.)</p>
-    </section>
+    <main>
+      <section class="card">
+        <h2>Objective</h2>
+        <p class="lead" style="margin-bottom: 0">
+          Hands-on practice with responsive web design: media queries, fluid
+          grid layouts, and evaluating real websites on a mobile device.
+        </p>
+      </section>
 
-    <section class="card">
-      <h2>Lab Tasks</h2>
-      <ul class="tasks">
-        <li>
-          <a href="task1-media-queries.html">Task 1: Media Queries</a>
-          <span class="desc">Four media query rules, with cards that light up as each rule becomes active: width 400–600px; portrait and narrower than 640px; narrower than 16:9 and 480–960px wide; print or narrower than 480px.</span>
-        </li>
-        <li>
-          <span class="pair"><a href="lab10a-fluid.html">Task 2: Fluid Grid Layout</a> <a href="lab10a-fixed.html">(original fixed version)</a></span>
-          <span class="desc"><code>lab10a-fixed.html</code> converted from fixed pixel widths to percentages using target ÷ context = result, so the layout resizes with the window.</span>
-        </li>
-        <li>
-          <span class="pair"><a href="lab10b-responsive.html">Task 3: Full Responsive Design</a> <a href="lab10b-fixed.html">(original fixed version)</a></span>
-          <span class="desc"><code>lab10b-fixed.html</code> rebuilt with a fluid grid, a flexible header image and media queries: 4 players per row on desktop, 3 on tablet, 2 on mobile and 1 on small phones.</span>
-        </li>
-        <li>
-          <a href="task4-website-evaluation.html">Task 4: Website Evaluation</a>
-          <span class="desc">Layout, navigation and readability problems found on weather.gov and cobb.com on a phone, and how responsive design would fix them.</span>
-        </li>
-      </ul>
-    </section>
+      <section class="card">
+        <h2>Lab Tasks</h2>
+        <ul class="tasks">
+          <li>
+            <a href="task1-media-queries.html">Task 1: Media Queries</a>
+            <span class="desc"
+              >Four media query rules, with cards that light up as each rule
+              becomes active: width 400–600px; portrait and narrower than 640px;
+              narrower than 16:9 and 480–960px wide; print or narrower than
+              480px.</span
+            >
+          </li>
+          <li>
+            <span class="pair"
+              ><a href="lab10a-fluid.html">Task 2: Fluid Grid Layout</a>
+              <a href="lab10a-fixed.html">(original fixed version)</a></span
+            >
+            <span class="desc"
+              ><code>lab10a-fixed.html</code> converted from fixed pixel widths
+              to percentages using target ÷ context = result, so the layout
+              resizes with the window.</span
+            >
+          </li>
+          <li>
+            <span class="pair"
+              ><a href="lab10b-responsive.html"
+                >Task 3: Full Responsive Design</a
+              >
+              <a href="lab10b-fixed.html">(original fixed version)</a></span
+            >
+            <span class="desc"
+              ><code>lab10b-fixed.html</code> rebuilt with a fluid grid, a
+              flexible header image and media queries: 4 players per row on
+              desktop, 3 on tablet, 2 on mobile and 1 on small phones.</span
+            >
+          </li>
+          <li>
+            <a href="task4-website-evaluation.html"
+              >Task 4: Website Evaluation</a
+            >
+            <span class="desc"
+              >Layout, navigation and readability problems found on weather.gov
+              and cobb.com on a phone, and how responsive design would fix
+              them.</span
+            >
+          </li>
+        </ul>
+      </section>
 
-    <section class="card">
-      <h2>Key Concepts</h2>
-      <dl class="concepts">
-        <dt>Viewport meta tag</dt>
-        <dd><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code> tells phones to use their real width. Without it, media queries for small screens never fire.</dd>
-        <dt>Fluid grid</dt>
-        <dd>Widths are written as percentages instead of pixels: <code>target ÷ context = result</code> (for example, 200px ÷ 900px = 22.2222%).</dd>
-        <dt>Flexible images</dt>
-        <dd><code>img { max-width: 100%; height: auto; }</code> lets images shrink with their column.</dd>
-        <dt>Media queries</dt>
-        <dd><code>@media screen and (max-width: 640px) { … }</code> applies extra CSS only when a condition is true, such as screen size, orientation, aspect ratio or print.</dd>
-        <dt>Breakpoints</dt>
-        <dd>The widths where the layout changes. Here they're 960px (tablet), 640px (mobile) and 420px (small phone).</dd>
-      </dl>
-    </section>
-  </main>
+      <section class="card">
+        <h2>Key Concepts</h2>
+        <dl class="concepts">
+          <dt>Viewport meta tag</dt>
+          <dd>
+            <code
+              >&lt;meta name="viewport" content="width=device-width,
+              initial-scale=1"&gt;</code
+            >
+            tells phones to use their real width. Without it, media queries for
+            small screens never fire.
+          </dd>
+          <dt>Fluid grid</dt>
+          <dd>
+            Widths are written as percentages instead of pixels:
+            <code>target ÷ context = result</code> (for example, 200px ÷ 900px =
+            22.2222%).
+          </dd>
+          <dt>Flexible images</dt>
+          <dd>
+            <code>img { max-width: 100%; height: auto; }</code> lets images
+            shrink with their column.
+          </dd>
+          <dt>Media queries</dt>
+          <dd>
+            <code>@media screen and (max-width: 640px) { … }</code> applies
+            extra CSS only when a condition is true, such as screen size,
+            orientation, aspect ratio or print.
+          </dd>
+          <dt>Breakpoints</dt>
+          <dd>
+            The widths where the layout changes. Here they're 960px (tablet),
+            640px (mobile) and 420px (small phone).
+          </dd>
+        </dl>
+      </section>
+    </main>
 
-  <footer class="site">
-    <p>IT 4403 Advanced Web and Mobile Applications · Lab 10</p>
-  </footer>
-</body>
+    <footer class="site">
+      <p>IT 4403 Advanced Web and Mobile Applications · Lab 10</p>
+    </footer>
+  </body>
 </html>
