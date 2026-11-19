@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Exercise 3 Before: Basic HTML Form | Lab 11</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 20px; }
+    .note { max-width: 700px; padding: 10px; background: #fff7e0; border-left: 5px solid #f5b335; }
+  </style>
+</head>
+<body>
+  <p><a href="index.html">Lab 11 Index</a> | <a href="exercise3-form.html">See the Bootstrap version</a></p>
+  <h1>Lab Help Request Form (Before Bootstrap)</h1>
+  <p class="note">This is the starting point for Exercise 3: a basic HTML form with no Bootstrap. The fields don't line up,
+    the inputs are browser-default sizes, and nothing adjusts for phones.</p>
+
+  <form action="#" onsubmit="alert('Demo only: nothing was sent.'); return false;">
+    <label for="firstName">First name</label>
+    <input type="text" id="firstName" name="firstName" required />
+    <label for="lastName">Last name</label>
+    <input type="text" id="lastName" name="lastName" required /><br /><br />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required />
+    <label for="phone">Phone</label>
+    <input type="tel" id="phone" name="phone" /><br /><br />
+
+    <label for="course">Course</label>
+    <select id="course" name="course" required>
+      <option value="">Choose a course</option>
+      <option value="it4403">IT 4403 Advanced Web and Mobile Applications</option>
+      <option value="other">Other IT course</option>
+    </select>
+    <label for="lab">Lab</label>
+    <select id="lab" name="lab" required>
+      <option value="">Choose a lab</option>
+        <option value="lab1">Lab 1: Website Design</option>
+        <option value="lab2">Lab 2: jQuery</option>
+        <option value="lab3">Lab 3: JSON</option>
+        <option value="lab4">Lab 4: RESTful Web APIs</option>
+        <option value="lab5">Lab 5: Open Library APIs</option>
+        <option value="lab6">Lab 6: AJAX</option>
+        <option value="lab7">Lab 7: AJAX REST and Cross-Origin Requests</option>
+        <option value="lab8">Lab 8: CSS Flexbox and Template</option>
+        <option value="lab9">Lab 9: Data Interaction Enhancements</option>
+        <option value="lab10">Lab 10: Responsive Web Design</option>
+        <option value="lab11">Lab 11: Bootstrap and Responsive UI</option>
+    </select>
+    <label for="priority">Priority</label>
+    <select id="priority" name="priority">
+      <option value="low">Low</option>
+      <option value="normal" selected>Normal</option>
+      <option value="high">High (due soon)</option>
+    </select><br /><br />
+
+    Topic:
+    <input type="radio" name="topic" id="topicGrid" value="grid" checked /> <label for="topicGrid">Grid layout</label>
+    <input type="radio" name="topic" id="topicNav" value="navbar" /> <label for="topicNav">Navbar</label>
+    <input type="radio" name="topic" id="topicForm" value="form" /> <label for="topicForm">Forms</label>
+    <input type="radio" name="topic" id="topicTable" value="table" /> <label for="topicTable">Tables</label>
+    <input type="radio" name="topic" id="topicOther" value="other" /> <label for="topicOther">Other</label><br /><br />
+
+    <label for="details">Describe the problem</label><br />
+    <textarea id="details" name="details" rows="4" cols="50" required></textarea><br /><br />
+
+    <label for="screenshot">Screenshot</label>
+    <input type="file" id="screenshot" name="screenshot" accept="image/*" />
+    <label for="contactBy">Preferred contact</label>
+    <select id="contactBy" name="contactBy">
+      <option value="email">Email</option>
+      <option value="phone">Phone</option>
+      <option value="office">Office hours</option>
+    </select><br /><br />
+
+    <input type="checkbox" id="tested" name="tested" required />
+    <label for="tested">I tested my page at phone, tablet and desktop widths</label><br /><br />
+
+    <input type="reset" value="Reset" />
+    <input type="submit" value="Submit Request" />
+  </form>
+</body>
+</html>

@@ -1,0 +1,121 @@
+/* Lab 11 shared styles: Bootstrap 5 plus the black-and-gold look of lab-work.html */
+:root {
+  --ksu-black: #000;
+  --ksu-gold: #f5b335;
+  --ksu-bg: #f4f5f7;
+  --ksu-link: #1a4f9c;
+}
+
+body {
+  background: var(--ksu-bg);
+  padding-bottom: 3.5rem; /* room for the breakpoint badge */
+}
+
+a { color: var(--ksu-link); }
+
+/* Page header (same idea as Lab 10) */
+.site-header {
+  color: #fff;
+  background: var(--ksu-black);
+  border-bottom: 6px solid var(--ksu-gold);
+}
+.site-header .kicker {
+  color: var(--ksu-gold);
+  font-weight: 700;
+  margin-bottom: .25rem;
+}
+.site-header h1 {
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Gold buttons */
+.btn-gold {
+  --bs-btn-color: #000;
+  --bs-btn-bg: var(--ksu-gold);
+  --bs-btn-border-color: var(--ksu-gold);
+  --bs-btn-hover-color: #000;
+  --bs-btn-hover-bg: #ffc95c;
+  --bs-btn-hover-border-color: #ffc95c;
+  --bs-btn-active-bg: #e0a020;
+  --bs-btn-active-border-color: #e0a020;
+  --bs-btn-active-color: #000;
+  --bs-btn-focus-shadow-rgb: 245, 179, 53;
+  font-weight: 700;
+}
+
+/* Navbar accent */
+.navbar-ksu {
+  border-bottom: 4px solid var(--ksu-gold);
+}
+.navbar-ksu .navbar-brand { color: var(--ksu-gold); font-weight: 700; }
+.navbar-ksu .navbar-brand:hover { color: #ffc95c; }
+.navbar-ksu .nav-link.active,
+.navbar-ksu .nav-link:hover,
+.navbar-ksu .nav-link:focus { color: var(--ksu-gold); }
+.navbar-ksu .nav-link.active { font-weight: 700; }
+
+/* Demo boxes that make the grid visible */
+.demo-box {
+  height: 100%;
+  padding: 1rem;
+  background: #fff;
+  border: 2px solid #212529;
+  border-top: 6px solid var(--ksu-gold);
+  border-radius: .375rem;
+}
+.demo-box .label {
+  display: inline-block;
+  margin-bottom: .5rem;
+  padding: .1rem .5rem;
+  color: #000;
+  background: var(--ksu-gold);
+  border-radius: .25rem;
+  font-family: var(--bs-font-monospace);
+  font-size: .8rem;
+  font-weight: 700;
+}
+.demo-box.tall { min-height: 220px; }
+.demo-box.dark { color: #fff; background: #212529; }
+.demo-box.dark a { color: var(--ksu-gold); }
+
+.code-chip {
+  font-family: var(--bs-font-monospace);
+  font-size: .85em;
+  padding: .1rem .35rem;
+  background: #e9ecef;
+  border-radius: .25rem;
+}
+
+.section-card {
+  background: #fff;
+  border-left: 5px solid var(--ksu-gold);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+}
+
+/* Breakpoint badge, always visible bottom-right so testers can see the active breakpoint */
+.bp-badge {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1050;
+  padding: .4rem .75rem;
+  color: #000;
+  background: var(--ksu-gold);
+  border: 2px solid #000;
+  border-radius: 2rem;
+  font-weight: 700;
+  font-size: .85rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+}
+
+.site-footer {
+  color: #dce5ef;
+  background: #000;
+  font-size: .875rem;
+}
+
+@media print {
+  .bp-badge, .navbar, .site-header .btn { display: none !important; }
+}

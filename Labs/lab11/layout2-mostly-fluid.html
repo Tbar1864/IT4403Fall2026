@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- The viewport tag is required for Bootstrap's responsive breakpoints to work on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Layout 2: Mostly Fluid | Lab 11</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="lab11-site.css" />
+  <style>.nav-pills{--bs-nav-pills-link-active-bg:#000;--bs-nav-pills-link-active-color:#f5b335;}.nav-pills .nav-link{color:#000;font-weight:600;}</style>
+</head>
+<body id="top">
+
+  <header class="site-header py-4">
+    <div class="container">
+      <p class="kicker">Exercise 1a: Bootstrap Grid Layouts</p>
+      <h1>Layout 2: Mostly Fluid</h1>
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <a class="btn btn-gold btn-sm" href="../../lab-work.html">&larr; Back to Lab Work</a>
+        <a class="btn btn-outline-light btn-sm" href="index.html">Lab 11 Index</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-4">
+    <nav aria-label="Grid layout pages" class="mb-4">
+      <ul class="nav nav-pills flex-wrap gap-1">
+        <li class="nav-item"><a class="nav-link" href="layout1-equal-columns.html">Layout 1</a></li>
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="layout2-mostly-fluid.html">Layout 2</a></li>
+        <li class="nav-item"><a class="nav-link" href="layout3-layout-shifter.html">Layout 3</a></li>
+        <li class="nav-item"><a class="nav-link" href="layout4-card-gallery.html">Layout 4</a></li>
+        <li class="nav-item"><a class="nav-link" href="layout5-nested-offset.html">Layout 5</a></li>
+        <li class="nav-item"><a class="nav-link" href="exercise1b-column-drop.html">1b: Column Drop</a></li>
+      </ul>
+    </nav>
+
+    <p class="lead">A wide hero area with columns underneath. On big screens the page stops growing and centers; on small screens everything stacks.</p>
+    <div class="row g-3 mb-3">
+      <div class="col-12"><div class="demo-box dark tall"><span class="label">col-12</span><h3 class="h6 fw-bold">Hero / Feature Area</h3><p class="mb-0">This full-width row is the main message of the page.</p></div></div>
+    </div>
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6 col-lg-4"><div class="demo-box "><span class="label">col-12 col-md-6 col-lg-4</span><h3 class="h6 fw-bold">Column A</h3><p class="mb-0 small">Resize the window to watch this box move.</p></div></div>
+      <div class="col-12 col-md-6 col-lg-4"><div class="demo-box "><span class="label">col-12 col-md-6 col-lg-4</span><h3 class="h6 fw-bold">Column B</h3><p class="mb-0 small">Resize the window to watch this box move.</p></div></div>
+      <div class="col-12 col-md-12 col-lg-4"><div class="demo-box "><span class="label">col-md-12 col-lg-4</span><h3 class="h6 fw-bold">Column C</h3><p class="mb-0 small">Resize the window to watch this box move.</p></div></div>
+    </div>
+  </main>
+  <div class="container-fluid bg-dark text-white py-3 mb-4">
+    <div class="row g-2 text-center">
+      <div class="col"><span class="code-chip text-dark">container-fluid</span> always spans the full window, unlike the capped <span class="code-chip text-dark">container</span> above.</div>
+    </div>
+  </div>
+  <main class="container">
+
+    <section class="section-card p-4 mb-4">
+      <h2 class="h4">How this layout works</h2>
+      <p class="mb-3">The page sits in a <span class="code-chip">container</span>, which is fluid on phones but has a maximum width at each breakpoint, so on large monitors the layout stays centered with margins. The hero is <span class="code-chip">col-12</span>. The three columns below are <span class="code-chip">col-12 col-md-6 col-lg-4</span>, and the last one is <span class="code-chip">col-md-12 col-lg-4</span> so it spans the full row on tablets instead of leaving a gap. The compare strip at the bottom uses <span class="code-chip">container-fluid</span>, which is always 100% wide.</p>
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mb-0 align-middle">
+          <thead class="table-dark"><tr><th scope="col">Screen width</th><th scope="col">What you should see</th></tr></thead>
+          <tbody>
+          <tr><th scope="row">Below 768px</th><td>Hero, then all three columns stacked.</td></tr>
+          <tr><th scope="row">768px to 991px (md)</th><td>Hero, then two columns side by side, then the third full width.</td></tr>
+          <tr><th scope="row">992px and up (lg+)</th><td>Hero, then three columns side by side. Page width is capped and centered.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small text-secondary mt-3 mb-0">Test it: drag the browser edge narrower and wider, or open DevTools device mode. The gold badge in the corner shows the active Bootstrap breakpoint.</p>
+    </section>
+
+    <div class="d-flex justify-content-between flex-wrap gap-2"><a class="btn btn-outline-dark" href="layout1-equal-columns.html">&larr; Layout 1: Equal Columns</a><a class="btn btn-dark" href="layout3-layout-shifter.html">Layout 3: Layout Shifter &rarr;</a></div>
+  </main>
+
+  <footer class="site-footer py-4 mt-5">
+    <div class="container">
+      <p class="mb-0">Disclaimer: This is a student website created for course projects in IT 4403 Advanced Web and Mobile
+        Applications at Kennesaw State University. The content is for educational purposes only.</p>
+    </div>
+  </footer>
+
+  <!-- Breakpoint badge: only one span is visible at a time, using Bootstrap display utilities -->
+  <div class="bp-badge" aria-hidden="true">
+    Breakpoint:
+    <span class="d-inline d-sm-none">xs (&lt;576px)</span>
+    <span class="d-none d-sm-inline d-md-none">sm (&ge;576px)</span>
+    <span class="d-none d-md-inline d-lg-none">md (&ge;768px)</span>
+    <span class="d-none d-lg-inline d-xl-none">lg (&ge;992px)</span>
+    <span class="d-none d-xl-inline d-xxl-none">xl (&ge;1200px)</span>
+    <span class="d-none d-xxl-inline">xxl (&ge;1400px)</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
