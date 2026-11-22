@@ -335,7 +335,6 @@ $(function () {
       });
   }
 
-  // ---------- Details on demand ----------
   // One delegated handler works for every card, in both sections, in both views
   $(document).on("click", ".book-select", function () {
     $(".book-card").removeClass("is-selected");
