@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milestone 4 | Open Library Book Explorer</title>
+  <link rel="stylesheet" href="milestone4.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <p class="eyebrow">Individual Project Milestone 4</p>
+        <h1>Open Library Book Explorer</h1>
+      </div>
+      <a class="header-link" href="../../projects.html">Back to Projects</a>
+    </div>
+  </header>
+
+  <main id="main-content" class="app-layout">
+    <!-- LEFT COLUMN: search, tabs, results, collection -->
+    <div class="browse-panel">
+
+      <!-- Search form (kept from Milestone 3) -->
+      <section class="panel search-panel" aria-labelledby="search-heading">
+        <h2 id="search-heading">Search for Books</h2>
+        <form id="search-form" class="search-form" novalidate>
+          <label for="search">Book title or keywords</label>
+          <div class="search-controls">
+            <input type="search" id="search" name="query" placeholder="Example: The Hobbit" autocomplete="off">
+            <button type="submit" id="search-button" class="btn btn-primary">Search</button>
+          </div>
+          <p class="help-text">Up to 50 results, shown 10 books per page.</p>
+        </form>
+        <p id="search-message" class="status-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <!-- Section tabs + layout switch -->
+      <div class="toolbar">
+        <div class="tabs" role="tablist" aria-label="Book sections">
+          <button type="button" class="tab" role="tab" id="tab-results" aria-controls="results-section" aria-selected="true">Search Results</button>
+          <button type="button" class="tab" role="tab" id="tab-collection" aria-controls="collection-section" aria-selected="false" tabindex="-1">Science Fiction Books</button>
+        </div>
+
+        <div class="view-toggle" role="group" aria-label="Choose layout">
+          <span class="view-label">Layout:</span>
+          <button type="button" class="view-btn" data-view="grid" aria-pressed="true">Grid View</button>
+          <button type="button" class="view-btn" data-view="list" aria-pressed="false">List View</button>
+        </div>
+      </div>
+
+      <!-- Search results tab -->
+      <section id="results-section" class="panel tab-panel" role="tabpanel" aria-labelledby="tab-results">
+        <div class="panel-heading">
+          <h2>Search Results</h2>
+          <p id="results-summary" class="summary">Submit a search to find books.</p>
+        </div>
+        <div id="books-list" class="book-collection view-grid" aria-live="polite"></div>
+        <nav id="pagination" class="pagination" aria-label="Search result pages" hidden></nav>
+      </section>
+
+      <!-- Predefined collection tab -->
+      <section id="collection-section" class="panel tab-panel" role="tabpanel" aria-labelledby="tab-collection" hidden>
+        <div class="panel-heading">
+          <h2>Science Fiction Books</h2>
+          <p class="summary">Ten books from the Open Library <strong>science_fiction</strong> subject.</p>
+        </div>
+        <p id="collection-message" class="status-message" role="status" aria-live="polite"></p>
+        <div id="collection-list" class="book-collection view-grid"></div>
+      </section>
+    </div>
+
+    <!-- RIGHT COLUMN: details-on-demand panel -->
+    <aside id="details-section" class="panel details-panel" aria-labelledby="details-heading" tabindex="-1">
+      <h2 id="details-heading">Book Details</h2>
+      <p id="details-message" class="status-message" role="status" aria-live="polite">Select a book from the search results or the collection to see its details here.</p>
+      <div id="details-content"></div>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <p>Milestone 4 | Data from the <a href="https://openlibrary.org/developers/api" target="_blank" rel="noopener">Open Library API</a></p>
+  </footer>
+
+  <!-- ===================== MUSTACHE TEMPLATES ===================== -->
+
+  <!-- Book card: reused by search results AND the collection.
+       CSS (.view-grid / .view-list) changes how the same markup is laid out. -->
+  <script id="book-card-template" type="x-tmpl-mustache">
+    {{#books}}
+    <article class="book-card">
+      <div class="cover-container">
+        {{#coverUrl}}
+          <img class="cover-image" src="{{coverUrl}}" alt="Cover of {{title}}" loading="lazy" width="90" height="135">
+        {{/coverUrl}}
+        {{^coverUrl}}
+          <div class="no-cover" role="img" aria-label="No cover available for {{title}}">No cover available</div>
+        {{/coverUrl}}
+      </div>
+      <div class="book-info">
+        <h3 class="book-title">
+          <button type="button" class="book-select" data-work-id="{{workId}}" data-source="{{source}}">{{title}}</button>
+        </h3>
+        <p class="book-authors">{{authorText}}</p>
+        <ul class="book-meta">
+          {{#year}}<li>First published {{year}}</li>{{/year}}
+          {{#editions}}<li>{{editions}} editions</li>{{/editions}}
+        </ul>
+        <button type="button" class="btn btn-small book-select" data-work-id="{{workId}}" data-source="{{source}}" aria-label="View details for {{title}}">View details</button>
+      </div>
+    </article>
+    {{/books}}
+  </script>
+
+  <!-- Pagination controls -->
+  <script id="pagination-template" type="x-tmpl-mustache">
+    <button type="button" class="btn page-btn" data-page="{{prevPage}}" {{^hasPrev}}disabled{{/hasPrev}}>&larr; Previous</button>
+    <ol class="page-numbers">
+      {{#pages}}
+        <li><button type="button" class="page-num {{#current}}is-current{{/current}}" data-page="{{number}}" aria-label="Page {{number}}" {{#current}}aria-current="page"{{/current}}>{{number}}</button></li>
+      {{/pages}}
+    </ol>
+    <button type="button" class="btn page-btn" data-page="{{nextPage}}" {{^hasNext}}disabled{{/hasNext}}>Next &rarr;</button>
+    <p class="page-indicator" aria-live="polite">Page {{currentPage}} of {{totalPages}}</p>
+  </script>
+
+  <!-- Selected book details -->
+  <script id="details-template" type="x-tmpl-mustache">
+    <article class="details-card">
+      <div class="details-top">
+        <div class="details-cover">
+          {{#coverUrl}}<img class="details-cover-image" src="{{coverUrl}}" alt="Cover of {{title}}" width="180" height="270">{{/coverUrl}}
+          {{^coverUrl}}<div class="no-cover no-cover-large" role="img" aria-label="No cover available for {{title}}">No cover available</div>{{/coverUrl}}
+        </div>
+        <div class="details-summary">
+          <h3 class="details-title">{{title}}</h3>
+          <dl class="details-facts">
+            <dt>Author(s)</dt><dd>{{authorText}}</dd>
+            <dt>Work ID</dt><dd><code>{{workId}}</code></dd>
+            {{#metadata}}<dt>{{label}}</dt><dd>{{value}}</dd>{{/metadata}}
+          </dl>
+        </div>
+      </div>
+
+      <h4>Description</h4>
+      <p class="details-description {{^hasDescription}}fallback{{/hasDescription}}">{{description}}</p>
+
+      <h4>Subjects</h4>
+      {{#hasSubjects}}
+        <ul class="subject-tags">{{#subjects}}<li>{{.}}</li>{{/subjects}}</ul>
+      {{/hasSubjects}}
+      {{^hasSubjects}}<p class="fallback">No subjects listed for this book.</p>{{/hasSubjects}}
+
+      <a class="btn btn-primary details-link" href="{{openLibraryUrl}}" target="_blank" rel="noopener">View on Open Library <span class="visually-hidden">(opens in a new tab)</span></a>
+    </article>
+  </script>
+
+  <!-- Loading placeholder -->
+  <script id="loading-template" type="x-tmpl-mustache">
+    {{#items}}<div class="book-card skeleton" aria-hidden="true"><div class="cover-container"></div><div class="book-info"><span></span><span></span></div></div>{{/items}}
+  </script>
+
+  <!-- Libraries: jQuery first, then Mustache, then the app -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js"></script>
+  <script src="milestone4.js"></script>
+</body>
+</html>
